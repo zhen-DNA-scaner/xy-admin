@@ -6,10 +6,10 @@
     @submit="handleSubmit"
   >
     <a-form-item>
-      <a-alert v-if="message" :message="message" type="error" showIcon closable />
+      <a-alert v-if="message" :message="message" :type="messageType" showIcon closable />
     </a-form-item>
     <a-form-item>
-      <a-input
+      <a-auto-complete
         v-decorator="[
           'email',
           {rules: [
@@ -19,13 +19,23 @@
         ]"
         placeholder="邮箱"
         size="large"
+        @change="handleEmailChange"
       >
+        <template slot="dataSource">
+          <a-select-option
+            v-for="email in autoCompleteEmail"
+            :key="email"
+          >
+            {{ email }}
+          </a-select-option>
+        </template>
+        <a-input />
         <a-icon
           slot="prefix"
           type="user"
           style="color: rgba(0,0,0,.25)"
         />
-      </a-input>
+      </a-auto-complete>
     </a-form-item>
     <a-form-item>
       <a-input
@@ -82,7 +92,6 @@
 </template>
 
 <script>
-  // import { getCaptcha, register } from '@/utils/api'
   export default {
     beforeCreate () {
       this.form = this.$form.createForm(this);
@@ -92,7 +101,9 @@
         captchaDisabled: false,
         captchaText: '',
         message: '',
-        loading: false
+        messageType: '',
+        loading: false,
+        autoCompleteEmail: []
       }
     },
     methods: {
@@ -103,10 +114,16 @@
         this.form.validateFields(async (err, values) => {
           if (!err) {
             this.loading = 'loading';
-            console.log(values)
-            // const res = await register({ body: values });
-            // if (res.status === 200) this.$router.push('/');
-            // else this.message = res.data.errMsg;
+            const res = await this.$axios.post('/api/register', values);
+            if(res.data.errMsg) {
+              this.messageType = 'error';
+              this.message = res.data.errMsg;
+            }
+            if(res.data.code === 20000) {
+              this.messageType = 'success';
+              this.message = '已注册，管理员通过后将会邮件通知!';
+              this.form.resetFields(['password2', 'captcha']);
+            }
             this.loading = false;
           }
         });
@@ -116,9 +133,8 @@
           if(!err){
             if(!this.form.getFieldsValue().email) return false;
             this.captchaDisabled = true;
-            console.log(values)
-            // const res = await getCaptcha();
-            // console.log(res);
+            const res = await this.$axios.post('/api/captcha', {email: values.email});
+            console.log(res.data)
             this.captchaCountdown();
           }
         })
@@ -136,6 +152,16 @@
             this.captchaText = `${time/1000}s`;
           }
         }, 1000);
+      },
+      handleEmailChange(value){
+        let autoCompleteEmail;
+        if (!value) {
+          autoCompleteEmail = [];
+        } else {
+          const emailTypes = ['@qq.com', '@163.com', '@126.com'];
+          autoCompleteEmail = emailTypes.map(email => `${value}${email}`);
+        }
+        this.autoCompleteEmail = autoCompleteEmail;
       }
     },
   };

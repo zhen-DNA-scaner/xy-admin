@@ -1,6 +1,19 @@
-const path = require('path')
+const path = require('path');
+const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
+  devServer: {
+    port: 8080,
+    proxy: {
+      '/api': {
+        target: isDev ? 'http:localhost:8080' : 'http://www.acfun.cn',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+  },
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'scss',

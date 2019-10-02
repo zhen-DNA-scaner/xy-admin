@@ -8,7 +8,7 @@
     >
       <div class="logo">
         <img src="img/logo/logo-mini.svg" />
-        <b v-show="!collapsed">晓月程序</b>
+        <b v-show="!collapsed">{{ $t('logo') }}</b>
       </div>
       <a-menu
       class="menu"
@@ -19,47 +19,47 @@
       :inlineCollapsed="collapsed"
     >
       <a-sub-menu key="sub1">
-        <span slot="title"><a-icon type="dashboard" /><span>仪表盘</span></span>
-        <a-menu-item key="sub1-1-1"><router-link to="/">分析台</router-link></a-menu-item>
-        <a-menu-item key="sub1-1-2">监控台</a-menu-item>
-        <a-menu-item key="sub1-1-3">工作台</a-menu-item>
+        <span slot="title"><a-icon type="dashboard" /><span>{{ $t('menu.dashboard') }}</span></span>
+        <a-menu-item key="sub1-1-1"><router-link to="/">{{ $t('menu.analysis') }}</router-link></a-menu-item>
+        <a-menu-item key="sub1-1-2">{{ $t('menu.monitor') }}</a-menu-item>
+        <a-menu-item key="sub1-1-3">{{ $t('menu.workbench') }}</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub2">
-        <span slot="title"><a-icon type="form" /><span>表单页</span></span>
-        <a-menu-item key="sub2-1-1">基础表单</a-menu-item>
-        <a-menu-item key="sub2-1-2">分步表单</a-menu-item>
-        <a-menu-item key="sub2-1-3">高级表单</a-menu-item>
+        <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
+        <a-menu-item key="sub2-1-1">{{ $t('menu.formbase') }}</a-menu-item>
+        <a-menu-item key="sub2-1-2">{{ $t('menu.formstepbystep') }}</a-menu-item>
+        <a-menu-item key="sub2-1-3">{{ $t('menu.formsenior') }}</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub3">
-        <span slot="title"><a-icon type="table" /><span>列表页</span></span>
-        <a-menu-item key="sub3-1-1">搜索列表</a-menu-item>
-        <a-menu-item key="sub3-1-2">查询表格</a-menu-item>
-        <a-menu-item key="sub3-1-3">标准列表</a-menu-item>
-        <a-menu-item key="sub3-1-4">卡片列表</a-menu-item>
+        <span slot="title"><a-icon type="table" /><span>{{ $t('menu.list') }}</span></span>
+        <a-menu-item key="sub3-1-1">{{ $t('menu.listsearch') }}</a-menu-item>
+        <a-menu-item key="sub3-1-2">{{ $t('menu.querytabel') }}</a-menu-item>
+        <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item>
+        <a-menu-item key="sub3-1-4">{{ $t('menu.listcard') }}</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub4">
-        <span slot="title"><a-icon type="pic-left" /><span>详情页</span></span>
-        <a-menu-item key="sub4-1-1">基础详情页</a-menu-item>
-        <a-menu-item key="sub4-1-2">高级详情页</a-menu-item>
+        <span slot="title"><a-icon type="pic-left" /><span>{{ $t('menu.detail') }}</span></span>
+        <a-menu-item key="sub4-1-1">{{ $t('menu.detailbase') }}</a-menu-item>
+        <a-menu-item key="sub4-1-2">{{ $t('menu.detailsenior') }}</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub5">
-        <span slot="title"><a-icon type="check-circle" /><span>结果页</span></span>
-        <a-menu-item key="sub5-1-1">成功页</a-menu-item>
-        <a-menu-item key="sub5-1-2">失败页</a-menu-item>
+        <span slot="title"><a-icon type="check-circle" /><span>{{ $t('menu.result') }}</span></span>
+        <a-menu-item key="sub5-1-1">{{ $t('menu.success') }}</a-menu-item>
+        <a-menu-item key="sub5-1-2">{{ $t('menu.fail') }}</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub6">
-        <span slot="title"><a-icon type="warning" /><span>异常页</span></span>
+        <span slot="title"><a-icon type="warning" /><span>{{ $t('menu.exception') }}</span></span>
         <a-menu-item key="sub6-1-1">403</a-menu-item>
         <a-menu-item key="sub6-1-2">404</a-menu-item>
         <a-menu-item key="sub6-1-3">500</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub7">
-        <span slot="title"><a-icon type="user" /><span>个人页</span></span>
-        <a-menu-item key="sub7-1-1">个人中心</a-menu-item>
-        <a-menu-item key="sub7-1-2">个人设置</a-menu-item>
+        <span slot="title"><a-icon type="user" /><span>{{ $t('menu.personal') }}</span></span>
+        <a-menu-item key="sub7-1-1">{{ $t('menu.personalcenter') }}</a-menu-item>
+        <a-menu-item key="sub7-1-2">{{ $t('menu.personalsetting') }}</a-menu-item>
       </a-sub-menu>
       <a-menu-item v-if="$auth(['admin'])" key="permission">
-        <router-link to="/permission"><a-icon type="key" /><span>管理权限页</span></router-link>
+        <router-link to="/permission"><a-icon type="key" /><span>{{ $t('menu.permission') }}</span></router-link>
       </a-menu-item>
     </a-menu>
     </a-layout-sider>
@@ -166,14 +166,14 @@
           </a-dropdown>
           <a-dropdown class="right-icon-wraper language-wraper">
             <a-icon class="icon" type="global" />
-            <a-menu slot="overlay">
-              <a-menu-item key="zh">
+            <a-menu slot="overlay" @click="({key}) => $i18n.locale=key">
+              <a-menu-item key="zh-CN">
                 <span role="img" aria-label="简体中文">🇨🇳 简体中文</span>
               </a-menu-item>
-              <a-menu-item key="fan">
-                <span role="img" aria-label="繁体中文">🇭🇰 繁体中文</span>
+              <a-menu-item key="zh-HK">
+                <span role="img" aria-label="繁体中文">🇭🇰 繁體中文</span>
               </a-menu-item>
-              <a-menu-item key="en">
+              <a-menu-item key="en-US">
                 <span role="img" aria-label="English">🇺🇸 English</span>
               </a-menu-item>
             </a-menu>
@@ -259,6 +259,7 @@ export default {
     overflow: hidden;
     word-break:keep-all;
     white-space:nowrap;
+    font-weight: 900;
     img{
       height: 30px;
       margin: 16px 16px 16px 28px;
