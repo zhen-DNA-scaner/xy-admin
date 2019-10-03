@@ -79,7 +79,6 @@
 </template>
 
 <script>
-  // import { login } from '@/utils/api';
   export default {
     beforeCreate () {
       this.form = this.$form.createForm(this);
@@ -98,13 +97,13 @@
         this.form.validateFields(async (err, values) => {
           if (!err) {
             this.loading = 'loading';
-            console.log(values)
-            // const res = await login({ body: values });
-            // if (res.status === 200 && !res.data.errMsg) {
-            //   this.$storage.set('userid', res.data._id);
-            //   this.$router.push('/');
-            // }
-            // else this.message = res.data.errMsg;
+            const res = await this.$axios.post('/api/login', values);
+            if (res.data.code === 20000 && !res.data.errMsg) {
+              this.$storage.set('user', res.data.data);
+              this.$store.commit('setUser', res.data.data);
+              this.$router.push('/');
+            }
+            else this.message = res.data.errMsg || '登录失败';
             this.loading = false;
           }
         });

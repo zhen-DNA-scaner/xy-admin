@@ -83,17 +83,17 @@
           </div>
           <a-tooltip class="right-icon-wraper">
             <template slot='title'>使用文档</template>
-            <a target="_blank">
+            <a href="https://github.com/Zepeng-Zheng/xy-admin" target="_blank">
               <a-icon class="icon" type="question-circle" />
             </a>
           </a-tooltip>
           <dropdown class="right-icon-wraper">
-            <a-badge class="bell-badge" :count="9932">
+            <a-badge class="bell-badge" :count="count">
               <a-icon class="icon" type="bell" />
             </a-badge>
             <div slot="content" class="message-container">
               <a-tabs defaultActiveKey="notice">
-                <a-tab-pane :tab="`通知 (3)`" key="notice">
+                <a-tab-pane :tab="`通知 (${noticeCount})`" key="notice">
                   <template v-if="notice.length > 0">
                     <ul class="message-ul notice-wraper">
                       <li v-for="item in notice" :key="item._id" :title="item.title">
@@ -104,11 +104,14 @@
                         </div>
                       </li>
                     </ul>
-                    <router-link class="bell-read-more" to="/notice">查看更多</router-link>
+                    <div class="bell-more-wraper">
+                      <span @click.stop="() => { noticeCount = 0; notice = []; }">全部已读</span>
+                      <router-link to="/notice">查看更多</router-link>
+                    </div>
                   </template>
                   <message-none v-else class="mesaage-none"><p>没有通知哟</p></message-none>
                 </a-tab-pane>
-                <a-tab-pane :tab="`消息 (34)`" key="message">
+                <a-tab-pane :tab="`消息 (${messageCount})`" key="message">
                   <template v-if="message.length > 0">
                     <ul class="message-ul message-wraper">
                       <li v-for="item in message" :key="item._id">
@@ -120,11 +123,14 @@
                         </div>
                       </li>
                     </ul>
-                    <router-link class="bell-read-more" to="/message">查看更多</router-link>
+                    <div class="bell-more-wraper">
+                      <span @click.stop="() => { messageCount = 0; message = []; }">全部已读</span>
+                      <router-link to="/message">查看更多</router-link>
+                    </div>
                   </template>
                   <message-none v-else class="mesaage-none"><p>没有消息哟</p></message-none>
                 </a-tab-pane>
-                <a-tab-pane :tab="`待办 (23)`" key="todo">
+                <a-tab-pane :tab="`待办 (${todoCount})`" key="todo">
                   <template v-if="todo.length > 0">
                     <ul class="message-ul todo-wraper">
                       <li v-for="item in todo" :key="item._id">
@@ -135,7 +141,10 @@
                         <p>{{item.creator.nickName}}提交于{{item.createTime}}，{{item.doer.nickName}}需在{{item.deathLine}}前完成。</p>
                       </li>
                     </ul>
-                    <router-link class="bell-read-more" to="/notice">查看更多</router-link>
+                    <div class="bell-more-wraper">
+                      <span @click.stop="() => { todoCount = 0; todo = []; }">全部已读</span>
+                      <router-link to="/todo">查看更多</router-link>
+                    </div>
                   </template>
                   <message-none v-else class="mesaage-none"><p>事情都干完了哟</p></message-none>
                 </a-tab-pane>
@@ -145,7 +154,7 @@
           <a-dropdown class="avatar-wraper">
             <div>
               <a-avatar class="avatar" size="small" :src="'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'" />
-              Zepeng Zheng
+              {{ user.nickName || user.email }}
             </div>
             <a-menu slot="overlay" @click="extendAccount">
               <a-menu-item key="user">
@@ -196,13 +205,64 @@ export default {
       searchKey: '',
       searchList: [],
       notice: [],
+      noticeCount:0,
       message: [],
-      todo: []
+      messageCount: 0,
+      todo: [],
+      todoCount: 0,
+      mapIcons: {
+        'warning': 'warning',
+        'info': 'exclamation-circle',
+        'danger': 'close-circle',
+        'success': 'check-circle',
+        '': 'question-circle'
+      },
+      mapTodoStatus: {
+        'undo': 'red',
+        'doing': 'orange',
+        'done': 'green'
+      },
+      mapTodoStatusText: {
+        'undo': '未开始',
+        'doing': '进行中',
+        'done': '已完成'
+      }
+    }
+  },
+  async created(){
+    const that = this;
+    const mapMessageList = ['notice', 'message', 'todo'];
+    const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
+    const promise = [
+      this.$axios.get('/api/notice'),
+      this.$axios.get('/api/message'),
+      this.$axios.get('/api/todo'),
+    ];
+    Promise.all(promise).then(res => {
+      res.forEach((v, i) => {
+        if (v.data.data) {
+          that[mapMessageCount[i]] = v.data.data.count;
+          that[mapMessageList[i]] = v.data.data.list || [];
+        }
+      })
+    })
+    const res = await this.$axios.get('/api/notice');
+    if (res.data.data) {
+      this.noticeCount = res.data.data.count;
+      this.notice = res.data.data.list || [];
     }
   },
   computed: {
     searchSelectClass(){
       return ['search-select', this.searchExtended ? 'extended' : ''];
+    },
+    count(){
+      return this.noticeCount + this.messageCount + this.todoCount;
+    },
+    user(){
+      let user = this.$store.getters && this.$store.getters.user;
+      if (!user) user = this.$storage.get('user') || {};
+      return user;
     }
   },
   watch: {
@@ -217,19 +277,24 @@ export default {
       if(!this.$refs.search.contains(e.target) && this.searchExtended) this.searchExtended = false;
     },
     getSearchRes: debounce(async function(e){
-      if (!e.target.value) {
+      const k = e.target.value;
+
+      if (!k) {
         this.searchList = [];
         return false;
       }
 
-      this.searchList = [
-        {_id:1, title: e.target.value + '提示1'},
-        {_id:2, title: e.target.value + '提示2'},
-        {_id:3, title: e.target.value + '提示3'},
-      ]
+      const res = await this.$axios.get(`/api/search?k=${k}`)
+      this.searchList = res.data.data || [];
     }, 500, { leading: false }),
-    extendAccount(key){
-      console.log(key)
+    extendAccount({ key }){
+      switch(key){
+        case 'logout':
+          this.$storage.clear('user');
+          this.$store.commit('setUser', null);
+          this.$router.replace('/login');
+          break;
+      }
     }
   }
 }
@@ -373,10 +438,21 @@ $navHeight: 50px;
   .bell-badge{
     width: 100%;
   }
-  .bell-read-more{
-    display: block;
+  .bell-more-wraper{
+    display: flex;
     border-top: solid 1px #eee;
-    padding: 1em;
+    height: 3em;
+    line-height: 3em;
+    span{
+      color: #999;
+      &:hover{
+        color: inherit;
+      }
+    }
+    a, span{
+      flex: 1;
+      text-align: center;
+    }
   }
   .mesaage-none{
     text-align: center;

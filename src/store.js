@@ -1,16 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import storage from './utils/storage'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: {
-      roles: ['admin']
-    }
+    user: null
   },
   getters: {
-    roles: state => state.user ? state.user.roles : []
+    roles: state => {
+      if(state.user && state.user.roles && state.user.roles.length > 0) return state.user.roles;
+      else {
+        const user = storage.get('user');
+        if (user && user.roles) return user.roles;
+      }
+      return [];
+    }
   },
   mutations: {
     setUser(state, payload){

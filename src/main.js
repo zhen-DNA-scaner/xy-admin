@@ -10,6 +10,7 @@ import directive from '@/directive';
 import hasPermission from '@/utils/permission';
 import VueI18n from 'vue-i18n';
 import axios from '@/utils/axios';
+import storage from '@/utils/storage';
 const mock = () => import('../mock');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -22,6 +23,7 @@ Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.prototype.$auth = hasPermission;
 Vue.prototype.$axios = axios;
+Vue.prototype.$storage = storage;
 
 const i18n = new VueI18n({
   locale: 'zh-CN', // 语言标识, 通过切换locale的值来实现语言切换, this.$i18n.locale
