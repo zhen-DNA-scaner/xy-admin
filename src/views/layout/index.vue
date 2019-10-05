@@ -338,9 +338,7 @@ export default {
   @include scrollbar(6px);
 }
 .layout-content{
-  margin: 24px 16px; 
-  padding: 24px;
-  background: #fff;
+  margin: 20px; 
   min-height: 280px;
 }
 $navHeight: 50px;
@@ -444,9 +442,9 @@ $navHeight: 50px;
     height: 3em;
     line-height: 3em;
     span{
-      color: #999;
+      color: #666;
       &:hover{
-        color: inherit;
+        color: #000;
       }
     }
     a, span{
