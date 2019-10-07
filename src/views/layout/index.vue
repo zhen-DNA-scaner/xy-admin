@@ -191,6 +191,9 @@
       </a-layout-header>
       <a-layout-content class="layout-content">
         <slot></slot>
+        <footer>
+          Copyright <a-icon type="copyright" /> 2019 小月IT工作室出品
+        </footer>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -329,6 +332,11 @@ export default {
       height: 30px;
       margin: 16px 16px 16px 28px;
     }
+  }
+  footer{
+    text-align: center;
+    padding: 80px 0 40px;
+    color: #999;
   }
 }
 .layout-leftnav{

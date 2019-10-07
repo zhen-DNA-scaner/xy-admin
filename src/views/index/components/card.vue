@@ -17,7 +17,7 @@
           <div class="item">日同比 11% <caret-down class="caret" fill="green" /></div>
         </div>
         <a-divider class="divider" />
-        日销售额￥12,423
+        <div class="foot">日销售额￥12,423</div>
       </a-card>
     </a-col>
     <a-col :span="6">
@@ -36,7 +36,7 @@
           <canvas ref="linechart" height="46"></canvas>
         </div>
         <a-divider class="divider" />
-        日访问量 1,234
+        <div class="foot">日访问量 1,234</div>
       </a-card> 
     </a-col>
     <a-col :span="6">
@@ -55,7 +55,7 @@
           <canvas ref="barchart" height="46"></canvas>
         </div>
         <a-divider class="divider" />
-        转化率 60%
+        <div class="foot">转化率 60%</div>
       </a-card>   
     </a-col>
     <a-col :span="6">
@@ -71,10 +71,10 @@
         </div>
         <span class="count">{{operationTxt}}</span>
         <div class="middle analysis-chart-mini">
-          <a-progress :percent="operationPercent * 100" :status="operationStatus" />
+          <a-progress :percent="operationPercent * 100" status="active" />
         </div>
         <a-divider class="divider" />
-        <div class="trend">
+        <div class="foot trend">
           <div class="item">周同比 12% <caret-up class="caret" fill="red" /></div>
           <div class="item">日同比 11% <caret-down class="caret" fill="green" /></div>
         </div>
@@ -133,49 +133,42 @@ export default {
   data(){
     return{
       lineChartWidth: 0,
-      operationPercent: .85,
-      operationStatus: 'success'
+      operationPercent: .85
     }
   },
   computed: {
     operationTxt(){
       const p = this.operationPercent
-      let mapTxt;
+      let mapTxt = '优秀';
       switch (true) {
         case p <= 100 && p >= 0.95:
           mapTxt = '优秀';
-          this.operationStatus = 'success';
           break;
 
         case p < 0.95 && p >= 0.8:
           mapTxt = '良好';
-          this.operationStatus = 'active';
           break;
       
         case p < 0.8 && p >= 0.7:
           mapTxt = '中等';
-          this.operationStatus = 'active';
           break;
 
         case p < 0.7 && p >= 0.6:
-          this.operationStatus = 'active';
           mapTxt = '较差';
           break;
 
         case p < 0.6 && p >= 0.3:
-          this.operationStatus = 'exception';
           mapTxt = '很差';
           break;
 
         case p < 0.3:
           mapTxt = '极差';
-          this.operationStatus = 'exception';
           break;
 
         default:
           break;
       }
-      return mapTxt;
+      return `${mapTxt}(${p * 100}%)`;
     }
   },
   methods: {
@@ -259,11 +252,11 @@ export default {
       flex: 1;
     }
     .caret{
-      font-size: 10px;
       margin-left: 5px;
     }
   }
   .card{
+    margin-bottom: 20px;
     .divider{
       margin: 10px 0;
     }
@@ -274,5 +267,8 @@ export default {
     canvas{
       width: 100%;
     }
+  }
+  .foot{
+    margin-bottom: -12px;
   }
 </style>
