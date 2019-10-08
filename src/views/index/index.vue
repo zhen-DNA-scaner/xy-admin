@@ -6,6 +6,7 @@
       <a-col :span="12"><search-key /></a-col>
       <a-col :span="12"><category /></a-col>
     </a-row>
+    <stores />
   </layout>
 </template>
 
@@ -14,12 +15,14 @@ import card from './components/card';
 import salesCard from './components/sales-card';
 import searchKey from './components/search-key';
 import category from './components/category';
+import stores from './components/stores';
 export default {
   components: {
     card,
     salesCard,
     searchKey,
-    category
+    category,
+    stores
   },
   mounted(){
   },

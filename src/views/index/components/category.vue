@@ -15,8 +15,27 @@
       </a-dropdown>
     </div>
     <div class="pie-wraper">
+      <h4>销售额</h4>
       <div v-if="current === 'all'">
-        <canvas ref="allCategoryChart"></canvas>
+        <a-row type="flex" class="chart-wraper">
+          <a-col :span="12">
+            <canvas ref="allCategoryChart" height="270"></canvas>
+            <div class="canvas-txt">
+              <label>销售额</label>
+              <div>￥{{ 15213 | formatNumber }}</div>
+            </div>
+          </a-col>
+          <a-col :span="12">
+            <ul>
+              <li v-for="item in formatData" :key="item.label">
+                <span class="dot" :style="{backgroundColor: item.backgroundColor}"></span>
+                {{item.label}}
+                <span class="percent">{{item.percent}}</span>
+                ￥{{item.salesVolume}}
+              </li>
+            </ul>
+          </a-col>
+        </a-row>
       </div>
       <div v-if="current === 'online'">
         online
@@ -32,13 +51,22 @@
 const options = {
   cutoutPercentage: 70,
   legend: {
-    position: 'right'
+    display: false
   },
-  legendCallback(chart){
-    console.log(chart)
-    return `<div>xxxx</div>`;
-  }
-}
+};
+
+const data = {
+  labels: ['家用电器','食用酒水','个护健康','服饰箱包','母婴产品','其他'],
+  datasets: [{
+    data: [4544, 3321, 3113, 2341, 1231, 1231],
+    backgroundColor: ['rgb(24, 144, 255)', 'rgb(19, 194, 194)', 'rgb(47, 194, 91)', 'rgb(250, 204, 20)', 'rgb(240, 72, 100)', 'rgb(133, 67, 224)'],
+    borderWidth: 5,
+    borderColor: '#fff',
+    hoverBorderWidth: 5,
+    hoverBorderColor: '#fff',
+    hoverBackgroundColor: ['rgba(24, 144, 255, 0.8)', 'rgba(19, 194, 194, 0.8)', 'rgba(47, 194, 91, 0.8)', 'rgba(250, 204, 20, 0.8)', 'rgba(240, 72, 100, 0.8)', 'rgba(133, 67, 224, 0.8)']
+  }]
+};
 
 import Chart from 'chart.js';
 export default {
@@ -47,7 +75,27 @@ export default {
   },
   data(){
     return{
-      current: 'all'
+      current: 'all',
+      chartData: data,
+    }
+  },
+  computed: {
+    formatData(){
+      const count = this.chartData.labels.length;
+      let data = [];
+      for(let i = 0; i < count; i++){
+        const salesVolume = this.chartData.datasets[0].data[i];
+        data.push({
+          backgroundColor: this.chartData.datasets[0].backgroundColor[i],
+          label: this.chartData.labels[i],
+          salesVolume,
+          percent: `${ Math.ceil( salesVolume / this.salesCount * 10000 ) / 100 }%`
+        })
+      }
+      return data;
+    },
+    salesCount(){
+      return this.chartData.datasets[0].data.reduce((n, m) => n+m);
     }
   },
   methods: {
@@ -56,22 +104,7 @@ export default {
       const ctx = this.$refs.allCategoryChart;
       var chart = new Chart(ctx, {
         type: 'doughnut',
-        data: {
-          labels: [
-            'RedRedRedRedRedRedRedRedRedRedRedRedR',
-            'YellowYellowYellowYellowYellow',
-            'BlueBlueBlueBlueBlueBlueBlueBlue'
-          ],
-          datasets: [{
-            data: [10, 20, 30],
-            backgroundColor: ['rgba(255,99,132,1)', 'rgba(54,162,235,1)', 'rgba(204,101,254,1)', 'rgba(255,206,86,1)'],
-            borderWidth: 5,
-            borderColor: '#fff',
-            hoverBorderWidth: 5,
-            hoverBorderColor: '#fff',
-            hoverBackgroundColor: ['rgba(255,99,132,0.8)', 'rgba(54,162,235,0.8)', 'rgba(204,101,254,0.8)', 'rgba(255,206,86,0.8)']
-          }]
-        },
+        data,
         options
       });
       chart.generateLegend();
@@ -91,7 +124,55 @@ export default {
       padding: 12px 0;
     }
     .pie-wraper{
-      margin: 30px 0;
+      margin: 0 0 30px 0;
+    }
+    .chart-wraper{
+      margin: 40px 0;
+      position: relative;
+      align-items: center;
+      ul{
+        padding: 0 0 0 20px;
+        list-style: none;
+      }
+      li{
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
+      .dot{
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .percent{
+        color: #999;
+        margin: 0 10px;
+        border-left: solid 1px #ddd;
+        display: inline-block;
+        padding-left: 10px;
+        line-height: 1;
+      }
+    }
+    .canvas-txt{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      text-align: center;
+      flex-wrap: wrap;
+      label{
+        display: block;
+        width: 100%;
+      }
+      div{
+        font-size: 2em;
+      }
     }
   }
 </style>

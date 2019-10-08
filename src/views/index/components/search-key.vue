@@ -18,7 +18,7 @@
             <a-icon type="info-circle" />
           </a-tooltip>
         </div>
-        <div class="number-data"><label>{{12321 || formatNumber}}</label> 12% <caret-up class="caret" fill="red" /></div>
+        <div class="number-data"><label>{{12321 | formatNumber}}</label> 12% <caret-up class="caret" fill="red" /></div>
         <canvas ref="searchCount" height="46"></canvas>
       </a-col>
       <a-col :span="11" :offset="2">
@@ -31,7 +31,7 @@
             <a-icon type="info-circle" />
           </a-tooltip>
         </div>
-        <div class="number-data"><label>{{2.7 || formatNumber}}</label> 2.4% <caret-down class="caret" fill="green" /></div>
+        <div class="number-data"><label>{{2.7 | formatNumber}}</label> 2.4% <caret-down class="caret" fill="green" /></div>
         <canvas ref="searchAverage" height="46"></canvas>
       </a-col>
     </a-row>
