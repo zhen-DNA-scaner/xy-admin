@@ -199,7 +199,8 @@
   </a-layout>
 </template>
 <script>
-import debounce from 'lodash/debounce'
+import debounce from 'lodash/debounce';
+import { getNotice, getMessage, getTodo, search } from '@/utils/api';
 export default {
   data(){
     return {
@@ -237,9 +238,9 @@ export default {
     const mapMessageList = ['notice', 'message', 'todo'];
     const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
     const promise = [
-      this.$axios.get('/api/notice'),
-      this.$axios.get('/api/message'),
-      this.$axios.get('/api/todo'),
+      getNotice(),
+      getMessage(),
+      getTodo(),
     ];
     Promise.all(promise).then(res => {
       res.forEach((v, i) => {
@@ -249,11 +250,6 @@ export default {
         }
       })
     })
-    const res = await this.$axios.get('/api/notice');
-    if (res.data.data) {
-      this.noticeCount = res.data.data.count;
-      this.notice = res.data.data.list || [];
-    }
   },
   computed: {
     searchSelectClass(){
@@ -287,7 +283,7 @@ export default {
         return false;
       }
 
-      const res = await this.$axios.get(`/api/search?k=${k}`)
+      const res = await search({ query: {k} });
       this.searchList = res.data.data || [];
     }, 500, { leading: false }),
     extendAccount({ key }){

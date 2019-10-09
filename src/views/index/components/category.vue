@@ -16,7 +16,7 @@
     </div>
     <div class="pie-wraper">
       <h4>销售额</h4>
-      <div v-if="current === 'all'">
+      <div v-show="current === 'all'">
         <a-row type="flex" class="chart-wraper">
           <a-col :span="12">
             <canvas ref="allCategoryChart" height="270"></canvas>
@@ -37,10 +37,10 @@
           </a-col>
         </a-row>
       </div>
-      <div v-if="current === 'online'">
+      <div v-show="current === 'online'">
         online
       </div>
-      <div v-if="current === 'offline'">
+      <div v-show="current === 'offline'">
         offline
       </div>
     </div>
@@ -166,6 +166,7 @@ export default {
       justify-content: center;
       text-align: center;
       flex-wrap: wrap;
+      pointer-events: none;
       label{
         display: block;
         width: 100%;

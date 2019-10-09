@@ -30,7 +30,7 @@
     <a-form-item>
       <a-input
         v-decorator="[
-          'password2',
+          'password',
           { rules: [{ required: true, message: '密码不能为空!' }] }
         ]"
         type="password"
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-  // import { getCaptcha, forget } from '@/utils/api'
+  import { getCaptcha, forget } from '@/utils/api';
   export default {
     beforeCreate () {
       this.form = this.$form.createForm(this);
@@ -107,18 +107,25 @@
     methods: {
       handleSubmit (e) {
         e.preventDefault();
+
+        this.message = '';
+        
         this.form.validateFields(async (err, values) => {
           if (!err) {
             this.loading = 'loading';
-            console.log(values)
-            // const res = await forget({ body: values });
-            // if (res.status === 200) {
-            //   this.msgType = 'success';
-            //   this.message = '验证成功';
-            //   setTimeout(()=>{
-            //     this.$router.push('/');
-            //   }, 1000);
-            // }
+            const res = await forget({ body: values });
+            if (res.data.code === 20000) {
+              this.msgType = 'success';
+              this.message = '密码设置成功';
+              this.$storage.set('user', res.data.data);
+              this.$store.commit('setUser', res.data.data);
+              setTimeout(()=>{
+                this.$router.push('/');
+              }, 1000);
+            } else if (res.data.errMsg) {
+              this.msgType = 'error';
+              this.message = res.data.errMsg;
+            }
             this.loading = false;
           }
         });
@@ -128,8 +135,8 @@
           if(!err){
             if(!this.form.getFieldsValue().email) return false;
             this.captchaDisabled = true;
-            console.log(values)
-            // const res = await getCaptcha();
+            const res = await getCaptcha({ body: { email: values.email } });
+            console.log(res)
             this.captchaCountdown();
           }
         })

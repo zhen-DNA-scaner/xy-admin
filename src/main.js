@@ -10,7 +10,6 @@ import directive from '@/directive';
 import filter from '@/filter';
 import hasPermission from '@/utils/permission';
 import VueI18n from 'vue-i18n';
-import axios from '@/utils/axios';
 import storage from '@/utils/storage';
 const mock = () => import('../mock');
 
@@ -24,7 +23,6 @@ Vue.use(filter);
 Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.prototype.$auth = hasPermission;
-Vue.prototype.$axios = axios;
 Vue.prototype.$storage = storage;
 
 const i18n = new VueI18n({

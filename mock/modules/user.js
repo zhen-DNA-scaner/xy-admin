@@ -9,8 +9,12 @@ const usersStatic = {
     roles: ['editor'],
     password: 'editor123'
   },
-  'admin@qq.com': {
+  'visitor@qq.com': {
     roles: null,
+    password: 'visitor123'
+  },
+  'admin@qq.com': {
+    roles: ['admin'],
     password: 'admin123'
   }
 }
@@ -25,7 +29,7 @@ export default [{
     }
     return {
       code: 20000,
-      data: Random.id()
+      data: Random.id(4)
     }
   }
 }, {
@@ -43,8 +47,9 @@ export default [{
     }
     return {
       code: 20000,
-      _id: Random.id(),
-      roles: usersStatic[email].roles
+      data: {
+        _id: Random.id()
+      }
     }
   }
 }, {
@@ -68,6 +73,36 @@ export default [{
       data: {
         nickName: userName,
         roles: user.roles
+      }
+    }
+  }
+}, {
+  url: '/api/forget',
+  type: 'post',
+  response: ({ body }) => {
+    const { email, password, captcha } = body || {};
+
+    if(!email || !password || !captcha) return {
+      code: 40022
+    }
+
+    const user = usersStatic[email];
+
+    if(!user) return {
+      code: 40004,
+      errMsg: '用户不存在'
+    }
+
+    if (!user.roles) return {
+      code: 40001,
+      errMsg: '暂无管理员权限!'
+    }
+
+    return {
+      code: 20000,
+      data: {
+        nickName: email,
+        roles: usersStatic[email].roles
       }
     }
   }

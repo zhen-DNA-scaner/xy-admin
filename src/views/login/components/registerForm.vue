@@ -92,6 +92,7 @@
 </template>
 
 <script>
+  import { getCaptcha, register } from '@/utils/api';
   export default {
     beforeCreate () {
       this.form = this.$form.createForm(this);
@@ -114,7 +115,7 @@
         this.form.validateFields(async (err, values) => {
           if (!err) {
             this.loading = 'loading';
-            const res = await this.$axios.post('/api/register', values);
+            const res = await register({ body: values });
             if(res.data.errMsg) {
               this.messageType = 'error';
               this.message = res.data.errMsg;
@@ -133,8 +134,8 @@
           if(!err){
             if(!this.form.getFieldsValue().email) return false;
             this.captchaDisabled = true;
-            const res = await this.$axios.post('/api/captcha', {email: values.email});
-            console.log(res.data)
+            const res = await getCaptcha({ body: { email: values.email } });
+            console.log(res)
             this.captchaCountdown();
           }
         })

@@ -13,9 +13,9 @@ const responseContextHandle = response => {
   return ctx => {
     const Random = Mock.Random;
     Random.extend({
-      id: function() {
+      id: function( n = 12 ) {
         const IDPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        return Random.string(IDPool, 12);
+        return Random.string(IDPool, n);
       }
     });
     ctx.Random = Random;

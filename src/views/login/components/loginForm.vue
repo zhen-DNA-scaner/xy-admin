@@ -79,6 +79,7 @@
 </template>
 
 <script>
+  import { login } from '@/utils/api';
   export default {
     beforeCreate () {
       this.form = this.$form.createForm(this);
@@ -97,7 +98,7 @@
         this.form.validateFields(async (err, values) => {
           if (!err) {
             this.loading = 'loading';
-            const res = await this.$axios.post('/api/login', values);
+            const res = await login({ body: values });
             if (res.data.code === 20000 && !res.data.errMsg) {
               this.$storage.set('user', res.data.data);
               this.$store.commit('setUser', res.data.data);

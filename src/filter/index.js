@@ -1,7 +1,8 @@
-import { formatNumber } from './modules/format';
+import { formatNumber, formatPercent } from './modules/format';
 
 export const filter = {
   formatNumber,
+  formatPercent
 };
 
 export default Vue => {
