@@ -194,7 +194,7 @@ export default {
           datasets: [{
             label: '下单笔数',
             data: [123, 134, 121, 165, 156, 144, 143, 125, 200, 197, 213, 190, 210, 217, 197, 221, 199, 231, 233, 251, 243, 211, 186, 153],
-            backgroundColor: 'rgba(240, 72, 100, 0.1)',
+            backgroundColor: 'rgba(240, 72, 100, 0.03)',
             borderWidth: 2,
             borderColor: 'rgb(240, 72, 100)',
             pointRadius: 0,
@@ -203,7 +203,7 @@ export default {
           },{
             label: '客流量',
             data: [232, 243, 235, 211, 235, 244, 254, 300, 312, 300, 321, 325, 300, 321, 352, 367, 300, 353, 432, 411, 400, 422, 342, 299],
-            backgroundColor: 'rgba(24, 144, 255, 0.1)',
+            backgroundColor: 'rgba(24, 144, 255, 0.03)',
             borderWidth: 2,
             borderColor: 'rgba(24, 144, 255, 1)',
             pointRadius: 0,

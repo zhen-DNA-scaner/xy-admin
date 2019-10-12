@@ -2,11 +2,13 @@ import Mock from 'mockjs';
 import user from './modules/user';
 import search from './modules/search';
 import message from './modules/message';
+import analysis from './modules/analysis';
 
 const apis = [
   ...user,
   ...search,
   ...message,
+  ...analysis
 ];
 
 const responseContextHandle = response => {

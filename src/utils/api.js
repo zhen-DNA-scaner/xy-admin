@@ -22,3 +22,8 @@ export const search = ({query}) => axios.get(`/api/search?${encodeQuery(query)}`
 export const getNotice = () => axios.get('/api/notice');
 export const getMessage = () => axios.get('/api/message');
 export const getTodo = () => axios.get('/api/todo');
+
+// analysis
+export const getAnalysis = () => axios.get('/api/analysis');
+export const getSales = ({query}) => axios.get(`/api/sales?${encodeQuery(query)}`);
+export const getPV = ({query}) => axios.get(`/api/pv?${encodeQuery(query)}`);

@@ -2,82 +2,114 @@
   <a-row :gutter="20">
     <a-col :span="6">
       <a-card class="card" :bordered=false>
-        <div class="title">
-          总销售额
-          <a-tooltip>
-            <template slot='title'>
-              销售额相关描述
-            </template>
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </div>
-        <span class="count">¥ 126,560</span>
-        <div class="middle trend">
-          <div class="item">周同比 12% <caret-up class="caret" fill="red" /></div>
-          <div class="item">日同比 11% <caret-down class="caret" fill="green" /></div>
-        </div>
-        <a-divider class="divider" />
-        <div class="foot">日销售额￥12,423</div>
+        <a-skeleton :loading="!(sales.count || sales.count === 0)" active>
+          <div>
+            <div class="title">
+              总销售额
+              <a-tooltip>
+                <template slot='title'>
+                  {{ sales.descriptions }}
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </div>
+            <span class="count">¥ {{ sales.count | formatNumber }}</span>
+            <div class="middle trend">
+              <div class="item">
+                周同比 {{ sales.trendWeekly | formatPercent }}
+                <caret-up v-if="sales.trendWeekly && sales.trendWeekly > 0" class="caret" fill="red" />
+                <caret-down v-else class="caret" fill="green" />
+              </div>
+              <div class="item">
+                日同比 {{ sales.trendDaily | formatPercent }}
+                <caret-up v-if="sales.trendDaily && sales.trendDaily > 0" class="caret" fill="red" />
+                <caret-down v-else class="caret" fill="green" />
+              </div>
+            </div>
+            <a-divider class="divider" />
+            <div class="foot">日销售额￥{{ sales.countDaily | formatNumber }}</div>
+          </div>
+        </a-skeleton>
       </a-card>
     </a-col>
     <a-col :span="6">
       <a-card class="card" :bordered=false>
-        <div class="title">
-          访问量
-          <a-tooltip>
-            <template slot='title'>
-              访问量相关描述
-            </template>
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </div>
-        <span class="count">8,846</span>
-        <div class="middle analysis-chart-mini">
-          <canvas ref="linechart" height="46"></canvas>
-        </div>
-        <a-divider class="divider" />
-        <div class="foot">日访问量 1,234</div>
+        <a-skeleton :loading="!(pv.count || pv.count === 0)" active>
+          <div>
+            <div class="title">
+              访问量
+              <a-tooltip>
+                <template slot='title'>
+                  {{ pv.descriptions }}
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </div>
+            <span class="count">{{ pv.count | formatNumber }}</span>
+            <div class="middle analysis-chart-mini">
+              <canvas ref="linechart" height="46"></canvas>
+            </div>
+            <a-divider class="divider" />
+            <div class="foot">日访问量 {{ pv.countDaily | formatNumber }}</div>
+          </div>
+        </a-skeleton>
       </a-card> 
     </a-col>
     <a-col :span="6">
       <a-card class="card" :bordered=false>
-        <div class="title">
-          总订单量
-          <a-tooltip>
-            <template slot='title'>
-              指标说明
-            </template>
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </div>
-        <span class="count">6,560</span>
-        <div class="middle analysis-chart-mini">
-          <canvas ref="barchart" height="46"></canvas>
-        </div>
-        <a-divider class="divider" />
-        <div class="foot">转化率 60%</div>
+        <a-skeleton :loading="!(order.count || order.count === 0)" active>
+          <div>
+            <div class="title">
+              总订单量
+              <a-tooltip>
+                <template slot='title'>
+                  {{ order.descriptions }}
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </div>
+            <span class="count">{{ order.count | formatNumber }}</span>
+            <div class="middle analysis-chart-mini">
+              <canvas ref="barchart" height="46"></canvas>
+            </div>
+            <a-divider class="divider" />
+            <div class="foot">转化率 {{ order.paiedRate | formatPercent }}</div>
+          </div>
+        </a-skeleton>
       </a-card>   
     </a-col>
     <a-col :span="6">
       <a-card class="card" :bordered=false>
-        <div class="title">
-          运营效果
-          <a-tooltip>
-            <template slot='title'>
-              指标说明
-            </template>
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </div>
-        <span class="count">{{operationTxt}}</span>
-        <div class="middle analysis-chart-mini">
-          <a-progress :percent="operationPercent * 100" status="active" />
-        </div>
-        <a-divider class="divider" />
-        <div class="foot trend">
-          <div class="item">周同比 12% <caret-up class="caret" fill="red" /></div>
-          <div class="item">日同比 11% <caret-down class="caret" fill="green" /></div>
-        </div>
+        <a-skeleton :loading="!(operation.score || operation.score === 0)" active>
+          <div>
+            <div class="title">
+              运营效果
+              <a-tooltip>
+                <template slot='title'>
+                  {{operation.descriptions}}
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </div>
+            <span class="count">{{operation.descriptions}}</span>
+            <div class="middle analysis-chart-mini">
+              <a-progress :percent="operation.score * 100" status="active" />
+            </div>
+            <a-divider class="divider" />
+            <div class="foot trend">
+              <div class="item">
+                周同比 {{ operation.trendWeekly | formatPercent }}
+                <caret-up v-if="operation.trendWeekly && operation.trendWeekly > 0" class="caret" fill="red" />
+                <caret-down v-else class="caret" fill="green" />
+              </div>
+              <div class="item">
+                日同比 {{ operation.trendDaily | formatPercent }}
+                <caret-up v-if="operation.trendDaily && operation.trendDaily > 0" class="caret" fill="red" />
+                <caret-down v-else class="caret" fill="green" />
+              </div>
+            </div>
+          </div>
+        </a-skeleton>
       </a-card>   
     </a-col>
   </a-row>
@@ -119,65 +151,39 @@ const chartOptions = {
 import caretUp from '@/components/icons/caret-up';
 import caretDown from '@/components/icons/caret-down';
 import Chart from 'chart.js';
+import { getAnalysis } from '@/utils/api';
 export default {
   components: {
     caretUp,
     caretDown
   },
-  mounted(){
-    this.$nextTick(()=>{
-      this.setLineChartData();
-      this.setBarChartData();
-    });
+  async mounted(){
+    const res = await getAnalysis();
+    if(res.data.code && res.data.code === 20000){
+      for(let k in res.data.data){
+        this[k] = res.data.data[k];
+      }
+    }
+    setTimeout(()=>{
+      this.setPVChartData();
+      this.setOrderChartData();
+    }, 0);
   },
   data(){
     return{
-      lineChartWidth: 0,
-      operationPercent: .85
-    }
-  },
-  computed: {
-    operationTxt(){
-      const p = this.operationPercent
-      let mapTxt = '优秀';
-      switch (true) {
-        case p <= 100 && p >= 0.95:
-          mapTxt = '优秀';
-          break;
-
-        case p < 0.95 && p >= 0.8:
-          mapTxt = '良好';
-          break;
-      
-        case p < 0.8 && p >= 0.7:
-          mapTxt = '中等';
-          break;
-
-        case p < 0.7 && p >= 0.6:
-          mapTxt = '较差';
-          break;
-
-        case p < 0.6 && p >= 0.3:
-          mapTxt = '很差';
-          break;
-
-        case p < 0.3:
-          mapTxt = '极差';
-          break;
-
-        default:
-          break;
-      }
-      return `${mapTxt}(${p * 100}%)`;
+      sales: {},
+      pv: {},
+      order: {},
+      operation: {}
     }
   },
   methods: {
-    setLineChartData(){
+    setPVChartData(){
       const ctx = this.$refs.linechart;
       new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['2019-10-04','2019-10-05','2019-10-06','2019-10-07','2019-10-08','2019-10-09','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10'],
+          labels: this.pv.data[0].labels,
           datasets: [
             {
               backgroundColor: '#f87979',
@@ -187,25 +193,25 @@ export default {
               pointHoverBorderWidth: 2,
               pointHoverBorderColor: '#fff',
               pointHoverBackgroundColor: '#f87979',
-              data: [7,5,4,2,4,7,5,6,5,9,6,3,1,5,3,6,5]
+              data: this.pv.data[0].datasets[0].data
             }
           ]
         },
         options: chartOptions
       });
     },
-    setBarChartData(){
+    setOrderChartData(){
       const ctx = this.$refs.barchart;
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['2019-10-04','2019-10-05','2019-10-06','2019-10-07','2019-10-08','2019-10-09','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10','2019-10-10'],
+          labels: this.order.data[0].labels,
           datasets: [
             {
               backgroundColor: '#1890ff',
               borderWidth: 0,
               borderColor: '#fff',
-              data: [7,5,4,2,4,7,5,6,5,9,6,3,1,5,3,6,5]
+              data: this.order.data[0].datasets[0].data
             }
           ]
         },
