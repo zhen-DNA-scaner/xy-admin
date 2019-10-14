@@ -90,10 +90,10 @@ export default {
       this.changeDate(this.currentDate)
     },
     changeDate(type, date){
+      this.currentDate = type;
       if(typeof type === 'string') {
         const now = new Date();
         const today = now.toLocaleDateString().replace(/\//g, '-');
-        this.currentDate = type;
 
         switch (type) {
           case 'today':
@@ -228,6 +228,9 @@ export default {
             yAxes: [{
               gridLines: {
                 borderDash: [4]
+              },
+              ticks: {
+                beginAtZero: true
               }
             }]
           },

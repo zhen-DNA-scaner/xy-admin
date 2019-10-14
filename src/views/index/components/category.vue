@@ -1,11 +1,11 @@
 <template>
   <a-card class="analysis-category-wraper" title="销售类别占比" :bordered=false>
     <div slot="extra">
-      <a-radio-group v-model="current" @change="change">
+      <!-- <a-radio-group v-model="current" @change="change">
         <a-radio-button value="all">全部渠道</a-radio-button>
         <a-radio-button value="online">线上</a-radio-button>
         <a-radio-button value="offline">门店</a-radio-button>
-      </a-radio-group>
+      </a-radio-group> -->
       <a-dropdown :trigger="['click']">
         <a-icon class="more-ctrl" type="ellipsis" />
         <a-menu slot="overlay">
@@ -27,22 +27,22 @@
           </a-col>
           <a-col :span="12">
             <ul>
-              <li v-for="item in formatData" :key="item.label">
-                <span class="dot" :style="{backgroundColor: item.backgroundColor}"></span>
-                {{item.label}}
-                <span class="percent">{{item.percent}}</span>
-                ￥{{item.salesVolume}}
+              <li v-for="(item, i) in chartData" :key="item._id">
+                <span class="dot" :style="{backgroundColor: backgroundColor[i]}"></span>
+                {{item.category.name}}
+                <span class="percent">{{item.sales/salesTotal | formatPercent}}</span>
+                ￥{{item.sales | formatNumber}}
               </li>
             </ul>
           </a-col>
         </a-row>
       </div>
-      <div v-show="current === 'online'">
+      <!-- <div v-show="current === 'online'">
         online
       </div>
       <div v-show="current === 'offline'">
         offline
-      </div>
+      </div> -->
     </div>
   </a-card>
 </template>
@@ -55,56 +55,53 @@ const options = {
   },
 };
 
-const data = {
-  labels: ['家用电器','食用酒水','个护健康','服饰箱包','母婴产品','其他'],
-  datasets: [{
-    data: [4544, 3321, 3113, 2341, 1231, 1231],
-    backgroundColor: ['rgb(24, 144, 255)', 'rgb(19, 194, 194)', 'rgb(47, 194, 91)', 'rgb(250, 204, 20)', 'rgb(240, 72, 100)', 'rgb(133, 67, 224)'],
-    borderWidth: 5,
-    borderColor: '#fff',
-    hoverBorderWidth: 5,
-    hoverBorderColor: '#fff',
-    hoverBackgroundColor: ['rgba(24, 144, 255, 0.8)', 'rgba(19, 194, 194, 0.8)', 'rgba(47, 194, 91, 0.8)', 'rgba(250, 204, 20, 0.8)', 'rgba(240, 72, 100, 0.8)', 'rgba(133, 67, 224, 0.8)']
-  }]
-};
-
 import Chart from 'chart.js';
+import { getAnalysisSalescategory } from '@/utils/api';
 export default {
-  mounted(){
-    this.setAllCategoryChart();
+  async mounted(){
+    const res = await getAnalysisSalescategory();
+    if(res.data && res.data.code === 20000){
+      this.chartData = res.data.data;
+      setTimeout(()=>{
+        this.setAllCategoryChart();
+      }, 0)
+    }
   },
   data(){
     return{
       current: 'all',
-      chartData: data,
+      chartData: [],
+      backgroundColor: ['rgb(24, 144, 255)', 'rgb(19, 194, 194)', 'rgb(47, 194, 91)', 'rgb(250, 204, 20)', 'rgb(240, 72, 100)', 'rgb(133, 67, 224)']
     }
   },
   computed: {
-    formatData(){
-      const count = this.chartData.labels.length;
-      let data = [];
-      for(let i = 0; i < count; i++){
-        const salesVolume = this.chartData.datasets[0].data[i];
-        data.push({
-          backgroundColor: this.chartData.datasets[0].backgroundColor[i],
-          label: this.chartData.labels[i],
-          salesVolume,
-          percent: `${ Math.ceil( salesVolume / this.salesCount * 10000 ) / 100 }%`
-        })
-      }
-      return data;
-    },
-    salesCount(){
-      return this.chartData.datasets[0].data.reduce((n, m) => n+m);
+    salesTotal(){
+      return this.chartData.map(v => v.sales).reduce((n, m) => n+m);
     }
   },
   methods: {
-    change(){},
+    // change(){},
     setAllCategoryChart(){
       const ctx = this.$refs.allCategoryChart;
+      let labels = [], data = [];
+      for(let o of this.chartData){
+        labels.push(o.category.name);
+        data.push(o.sales);
+      }
       var chart = new Chart(ctx, {
         type: 'doughnut',
-        data,
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: this.backgroundColor,
+            borderWidth: 5,
+            borderColor: '#fff',
+            hoverBorderWidth: 5,
+            hoverBorderColor: '#fff',
+            hoverBackgroundColor: ['rgba(24, 144, 255, 0.8)', 'rgba(19, 194, 194, 0.8)', 'rgba(47, 194, 91, 0.8)', 'rgba(250, 204, 20, 0.8)', 'rgba(240, 72, 100, 0.8)', 'rgba(133, 67, 224, 0.8)']
+          }]
+        },
         options
       });
       chart.generateLegend();

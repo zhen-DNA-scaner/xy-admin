@@ -50,7 +50,7 @@
 <script>
 const columns = [{
   title: '排名',
-  dataIndex: 'range',
+  dataIndex: 'rank',
   sorter: true,
 }, {
   title: '搜索关键词',
@@ -61,62 +61,42 @@ const columns = [{
   sorter: true,
 }, {
   title: '周涨幅',
-  dataIndex: 'gain',
+  dataIndex: 'weekTrend',
   sorter: true
 }];
-
-const tableData = [{
-  range: 1,
-  key: '搜索关键词-0',
-  userCount: 980,
-  gain: -0.4
-},{
-  range: 2,
-  key: '搜索关键词-1',
-  userCount: 861,
-  gain: 0.55
-},{
-  range: 3,
-  key: '搜索关键词-2',
-  userCount: 579,
-  gain: 0.28
-},{
-  range: 4,
-  key: '搜索关键词-4',
-  userCount: 511,
-  gain: 0.5
-},{
-  range: 5,
-  key: '搜索关键词-6',
-  userCount: 561,
-  gain: -0.78
-},];
 
 import caretUp from '@/components/icons/caret-up';
 import caretDown from '@/components/icons/caret-down';
 import Chart from 'chart.js';
+import { getAnalysisSearch } from '@/utils/api';
 export default {
   components: {
     caretUp,
     caretDown
   },
-  mounted(){
-    this.setSearchCountChartData();
-    this.setSearchAverageChartData();
+  async mounted(){
+    const res = await getAnalysisSearch();
+    if(res.data.code && res.data.code === 20000){
+      this.tableData = res.data.data.list;
+      setTimeout(()=>{
+        this.setSearchCountChartData(res.data.data.usersSearch.datasets);
+        this.setSearchAverageChartData(res.data.data.average.datasets);
+      }, 0)
+    }
   },
   data(){
     return{
       columns,
-      tableData: [...tableData],
+      tableData: [],
     }
   },
   methods: {
-    setSearchCountChartData(){
+    setSearchCountChartData(datasets){
       const ctx = this.$refs.searchCount;
       new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['2019-10-7', '2019-10-8', '2019-10-9', '2019-10-10', '2019-10-11', '2019-10-11', '2019-10-12', '2019-10-13'],
+          labels: datasets.labels,
           datasets: [
             {
               label: '访问量',
@@ -126,7 +106,7 @@ export default {
               pointRadius: 0,
               pointHitRadius: 20,
               pointBackgroundColor: 'rgba(24, 144, 255, 1)',
-              data: [1,6,4,8,3,7,2]
+              data: datasets.data
             }
           ]
         },
@@ -163,12 +143,12 @@ export default {
         }
       })
     },
-    setSearchAverageChartData(){
+    setSearchAverageChartData(datasets){
       const ctx = this.$refs.searchAverage;
       new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['2019-10-7', '2019-10-8', '2019-10-9', '2019-10-10', '2019-10-11', '2019-10-11', '2019-10-12', '2019-10-13'],
+          labels: datasets.labels,
           datasets: [
             {
               label: '访问量',
@@ -178,7 +158,7 @@ export default {
               pointRadius: 0,
               pointHitRadius: 20,
               pointBackgroundColor: 'rgba(24, 144, 255, 1)',
-              data: [1,3,4,6,3,7,2]
+              data: datasets.data
             }
           ]
         },
@@ -215,13 +195,15 @@ export default {
         }
       })
     },
-    changeTable(pagination, filters, sorter){
-      const order = sorter.order;
-      order ? this.tableData = [...this.tableData.sort((a, b) => {
-        const _a = a[sorter.field];
-        const _b = b[sorter.field]
-        return order === 'ascend' ? _a - _b : _b - _a;
-      })] : this.tableData = [...tableData];
+    async changeTable(pagination, filters, sorter){
+      const mapOrder = {
+        'ascend': 'asc',
+        'descend': 'descend',
+      };
+      const order = mapOrder[sorter.order] || '';
+      const res = await getAnalysisSearch({ query: { key: sorter.columnKey, sort: order } });
+      console.log(res)
+      this.tableData = res.data.data.list;
     }
   }
 }

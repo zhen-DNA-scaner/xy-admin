@@ -2,173 +2,80 @@
   <a-card class="analysis-stores" title="商品转化率" :bordered=false>
     <div slot="extra" class="card-head-extra">
       <div class="days-selection">
-        <span :class="{active: currentDate === 'today'}" @click="() => currentDate = 'today'">今日</span>
-        <span :class="{active: currentDate === 'weekly'}" @click="() => currentDate = 'weekly'">本周</span>
-        <span :class="{active: currentDate === 'monthly'}" @click="() => currentDate = 'monthly'">本月</span>
-        <span :class="{active: currentDate === 'year'}" @click="() => currentDate = 'year'">全年</span>
+        <span :class="{active: currentDate === 'today'}" @click="changeDate('today')">今日</span>
+        <span :class="{active: currentDate === 'week'}" @click="changeDate('week')">本周</span>
+        <span :class="{active: currentDate === 'month'}" @click="changeDate('month')">本月</span>
+        <span :class="{active: currentDate === 'year'}" @click="changeDate('year')">全年</span>
       </div>
       <a-range-picker :defaultValue="[moment(), moment()]" @change="changeDate" />
     </div>
-    <a-tabs type="card" :defaultActiveKey="0">
-      <a-tab-pane v-for="(item, i) in data" :key="i">
+    <a-tabs type="card" :defaultActiveKey="0" @change="changeStores">
+      <a-tab-pane v-for="(item, i) in goods" :key="i">
         <div slot="tab" class="tab-item">
-          <h3>{{item.title}}</h3>
+          <h3>{{item.name}}</h3>
           <div class="info-wraper">
             <div class="info">
               <span class="label">转化率</span>
-              <span class="rate">{{ item.paied / item.ip | formatPercent }}</span>
+              <span class="rate">{{ item.paied / item.uv | formatPercent }}</span>
             </div>
             <canvas :ref="`storesChart_${i}`" width="50" height="50"></canvas>
           </div>
         </div>
-        <div>
-          <canvas :ref="`storesContentChart_${i}`" height="80"></canvas>
-        </div>
       </a-tab-pane>
-    </a-tabs> 
+    </a-tabs>
+    <canvas ref="storesContentChart" height="80"></canvas>
   </a-card>
 </template>
 
 <script>
 import moment from 'moment';
 import Chart from 'chart.js';
+import { getAnalysisGoods, getAnalysisGood } from '@/utils/api';
+import { getCurrentDateRange } from '@/utils';
+
+
+function resetChartData(chart, labels, datasets){
+  chart.data.labels = labels;
+  chart.data.datasets = datasets;
+  chart.update();
+}
+
 export default {
-  mounted(){
-    this.initChart();
-    this.initStoresContentChart();
+  async mounted(){
+    const goodsRes = await getAnalysisGoods();
+
+    if(goodsRes.data && goodsRes.data.code === 20000){
+      this.goods = goodsRes.data.data;
+      setTimeout(()=>{
+        this.initChart();
+        this.setStoresChart();
+      }, 0);
+    }
   },
   data(){
     return{
       currentDate: 'today',
-      data: [
-        {
-          _id: 1,
-          title: 'stores 1',
-          content: 'content of stores 1',
-          ip: 120,
-          paied: 20,
-          
-        },{
-          _id: 2,
-          title: 'stores 2',
-          content: 'content of stores 2',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 3,
-          title: 'stores 3',
-          content: 'content of stores 3',
-          ip: 70,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 4',
-          content: 'content of stores 4',
-          ip: 240,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 5',
-          content: 'content of stores 5',
-          ip: 640,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 6',
-          content: 'content of stores 6',
-          ip: 340,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 7',
-          content: 'content of stores 7',
-          ip: 230,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 8',
-          content: 'content of stores 8',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 9',
-          content: 'content of stores 9',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 10',
-          content: 'content of stores 10',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 11',
-          content: 'content of stores 11',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 12',
-          content: 'content of stores 12',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 13',
-          content: 'content of stores 13',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 14',
-          content: 'content of stores 14',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 15',
-          content: 'content of stores 15',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 16',
-          content: 'content of stores 16',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 17',
-          content: 'content of stores 17',
-          ip: 100,
-          paied: 35
-        },{
-          _id: 1,
-          title: 'stores 18',
-          content: 'content of stores 18',
-          ip: 100,
-          paied: 35
-        },
-      ]
+      goods: [],
+      chart: null,
+      activeStores: 0
     }
   },
   methods: {
     moment,
     initChart(){
-      var _this = this;
-      this.data.forEach((v, i) => {
+      const _this = this;
+      this.goods.forEach((v, i) => {
         const ctx = _this.$refs[`storesChart_${i}`];
         new Chart(ctx, {
           type: 'doughnut',
           data: {
             labels: ['支付笔数', '客流量'],
             datasets: [{
-              data: [v.paied, v.ip - v.paied],
+              data: [v.paied, v.uv - v.paied],
               backgroundColor: ['rgb(24, 144, 255)', 'rgba(0, 0, 0, 0.1)'],
               borderColor: '#fff',
-              hoverBorderWidth: 2,
+              borderWidth: 0,
+              hoverBorderWidth: 0,
               hoverBorderColor: '#fff',
             }]
           },
@@ -185,31 +92,43 @@ export default {
         })
       })
     },
-    initStoresContentChart(i = 0){
-      const ctx = this.$refs[`storesContentChart_${i}`];
-      new Chart(ctx, {
+    async setStoresChart(dateRange){
+      if(!dateRange) dateRange = getCurrentDateRange();
+      let res = await getAnalysisGood({ params: this.goods[this.activeStores]._id, query: dateRange })
+      if(!res.data || res.data.code !== 20000) return false;
+
+      const labels = res.data.data.labels;
+      let datasets = res.data.data.datasets;
+      const uv = {
+        backgroundColor: 'rgba(24, 144, 255, 0.03)',
+        borderWidth: 2,
+        borderColor: 'rgba(24, 144, 255, 1)',
+        pointRadius: 0,
+        pointHitRadius: 20,
+        pointBackgroundColor: 'rgba(24, 144, 255, 1)',
+      };
+      const paied = {
+        backgroundColor: 'rgba(240, 72, 100, 0.03)',
+        borderWidth: 2,
+        borderColor: 'rgb(240, 72, 100)',
+        pointRadius: 0,
+        pointHitRadius: 20,
+        pointBackgroundColor: 'rgb(240, 72, 100)',
+      };
+
+      datasets = datasets.map(v => Object.assign(v.label === '客流量' ? uv : paied, v))
+
+      if (this.chart) {
+        resetChartData(this.chart, labels, datasets);
+        return false;
+      }
+
+      const ctx = this.$refs.storesContentChart;
+      this.chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
-          datasets: [{
-            label: '下单笔数',
-            data: [123, 134, 121, 165, 156, 144, 143, 125, 200, 197, 213, 190, 210, 217, 197, 221, 199, 231, 233, 251, 243, 211, 186, 153],
-            backgroundColor: 'rgba(240, 72, 100, 0.03)',
-            borderWidth: 2,
-            borderColor: 'rgb(240, 72, 100)',
-            pointRadius: 0,
-            pointHitRadius: 20,
-            pointBackgroundColor: 'rgb(240, 72, 100)',
-          },{
-            label: '客流量',
-            data: [232, 243, 235, 211, 235, 244, 254, 300, 312, 300, 321, 325, 300, 321, 352, 367, 300, 353, 432, 411, 400, 422, 342, 299],
-            backgroundColor: 'rgba(24, 144, 255, 0.03)',
-            borderWidth: 2,
-            borderColor: 'rgba(24, 144, 255, 1)',
-            pointRadius: 0,
-            pointHitRadius: 20,
-            pointBackgroundColor: 'rgba(24, 144, 255, 1)',
-          }]
+          labels,
+          datasets
         },
         options: {
           scales: {
@@ -227,7 +146,26 @@ export default {
         }
       })
     },
-    changeDate(){},
+    changeStores(key){
+      this.activeStores = key;
+      this.setStoresChart();
+    },
+    changeDate(type, date){
+      this.currentDate = type;
+      if(typeof type === 'string') {
+        getCurrentDateRange({
+          type,
+          callback: ({startDate, endDate}) => {
+            this.setStoresChart({startDate, endDate});
+          } 
+        })
+      } else {
+        this.setStoresChart({
+          startDate: date[0],
+          endDate: date[1]
+        });
+      }
+    },
   }
 }
 </script>

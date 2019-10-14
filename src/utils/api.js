@@ -1,6 +1,8 @@
 import axios from '@/utils/axios';
 
 const encodeQuery = query => {
+  if(!query) return '';
+
   let keyArr = [];
   for(let k in query){
     if(query[k]) keyArr.push(`${k}=${query[k]}`);
@@ -27,3 +29,11 @@ export const getTodo = () => axios.get('/api/todo');
 export const getAnalysis = () => axios.get('/api/analysis');
 export const getSales = ({query}) => axios.get(`/api/sales?${encodeQuery(query)}`);
 export const getPV = ({query}) => axios.get(`/api/pv?${encodeQuery(query)}`);
+export const getAnalysisSearch = (data) => {
+  let query = '';
+  if(data) query = encodeQuery(data.query);
+  return axios.get(`/api/analysis/search?${query}`)
+};
+export const getAnalysisSalescategory = () => axios.get('/api/analysis/salescategory');
+export const getAnalysisGoods = () => axios.get('/api/analysis/goods');
+export const getAnalysisGood = ({ params, query } = {}) => axios.get(`/api/analysis/good/${params}?${encodeQuery(query)}`);
