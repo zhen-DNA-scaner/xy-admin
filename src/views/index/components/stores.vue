@@ -9,21 +9,25 @@
       </div>
       <a-range-picker :defaultValue="[moment(), moment()]" @change="changeDate" />
     </div>
-    <a-tabs type="card" :defaultActiveKey="0" @change="changeStores">
-      <a-tab-pane v-for="(item, i) in goods" :key="i">
-        <div slot="tab" class="tab-item">
-          <h3>{{item.name}}</h3>
-          <div class="info-wraper">
-            <div class="info">
-              <span class="label">转化率</span>
-              <span class="rate">{{ item.paied / item.uv | formatPercent }}</span>
+    <a-skeleton :loading="!goods" active :paragragh="{rows: 8}">
+      <div v-if="goods">
+        <a-tabs type="card" :defaultActiveKey="0" @change="changeStores">
+          <a-tab-pane v-for="(item, i) in goods" :key="i">
+            <div slot="tab" class="tab-item">
+              <h3>{{item.name}}</h3>
+              <div class="info-wraper">
+                <div class="info">
+                  <span class="label">转化率</span>
+                  <span class="rate">{{ item.paied / item.uv | formatPercent }}</span>
+                </div>
+                <canvas :ref="`storesChart_${i}`" width="50" height="50"></canvas>
+              </div>
             </div>
-            <canvas :ref="`storesChart_${i}`" width="50" height="50"></canvas>
-          </div>
-        </div>
-      </a-tab-pane>
-    </a-tabs>
-    <canvas ref="storesContentChart" height="80"></canvas>
+          </a-tab-pane>
+        </a-tabs>
+        <canvas ref="storesContentChart" height="80"></canvas>
+      </div>
+    </a-skeleton>
   </a-card>
 </template>
 
@@ -55,7 +59,7 @@ export default {
   data(){
     return{
       currentDate: 'today',
-      goods: [],
+      goods: null,
       chart: null,
       activeStores: 0
     }
@@ -153,12 +157,7 @@ export default {
     changeDate(type, date){
       this.currentDate = type;
       if(typeof type === 'string') {
-        getCurrentDateRange({
-          type,
-          callback: ({startDate, endDate}) => {
-            this.setStoresChart({startDate, endDate});
-          } 
-        })
+        this.setStoresChart(getCurrentDateRange({ type }))
       } else {
         this.setStoresChart({
           startDate: date[0],

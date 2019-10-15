@@ -14,36 +14,38 @@
         </a-menu>
       </a-dropdown>
     </div>
-    <div class="pie-wraper">
-      <h4>销售额</h4>
-      <div v-show="current === 'all'">
-        <a-row type="flex" class="chart-wraper">
-          <a-col :span="12">
-            <canvas ref="allCategoryChart" height="270"></canvas>
-            <div class="canvas-txt">
-              <label>销售额</label>
-              <div>￥{{ 15213 | formatNumber }}</div>
-            </div>
-          </a-col>
-          <a-col :span="12">
-            <ul>
-              <li v-for="(item, i) in chartData" :key="item._id">
-                <span class="dot" :style="{backgroundColor: backgroundColor[i]}"></span>
-                {{item.category.name}}
-                <span class="percent">{{item.sales/salesTotal | formatPercent}}</span>
-                ￥{{item.sales | formatNumber}}
-              </li>
-            </ul>
-          </a-col>
-        </a-row>
+    <a-skeleton :loading="!chartData" active :paragragh="{rows: 8}">
+      <div v-if="chartData" class="pie-wraper">
+        <h4>销售额</h4>
+        <div v-show="current === 'all'">
+          <a-row type="flex" class="chart-wraper">
+            <a-col :span="12">
+              <canvas ref="allCategoryChart" height="270"></canvas>
+              <div class="canvas-txt">
+                <label>销售额</label>
+                <div>￥{{ salesTotal | formatNumber }}</div>
+              </div>
+            </a-col>
+            <a-col :span="12">
+              <ul>
+                <li v-for="(item, i) in chartData" :key="item._id">
+                  <span class="dot" :style="{backgroundColor: backgroundColor[i]}"></span>
+                  {{item.category.name}}
+                  <span class="percent">{{item.sales/salesTotal | formatPercent}}</span>
+                  ￥{{item.sales | formatNumber}}
+                </li>
+              </ul>
+            </a-col>
+          </a-row>
+        </div>
+        <!-- <div v-show="current === 'online'">
+          online
+        </div>
+        <div v-show="current === 'offline'">
+          offline
+        </div> -->
       </div>
-      <!-- <div v-show="current === 'online'">
-        online
-      </div>
-      <div v-show="current === 'offline'">
-        offline
-      </div> -->
-    </div>
+    </a-skeleton>
   </a-card>
 </template>
 
@@ -70,7 +72,7 @@ export default {
   data(){
     return{
       current: 'all',
-      chartData: [],
+      chartData: null,
       backgroundColor: ['rgb(24, 144, 255)', 'rgb(19, 194, 194)', 'rgb(47, 194, 91)', 'rgb(250, 204, 20)', 'rgb(240, 72, 100)', 'rgb(133, 67, 224)']
     }
   },

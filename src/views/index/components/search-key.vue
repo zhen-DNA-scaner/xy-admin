@@ -7,43 +7,58 @@
         <a-menu-item>操作二</a-menu-item>
       </a-menu>
     </a-dropdown>
-    <a-row>
-      <a-col :span="11">
-        <div>
-          搜索用户数
-          <a-tooltip>
-            <template slot='title'>
-              指标说明
-            </template>
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </div>
-        <div class="number-data"><label>{{12321 | formatNumber}}</label> 12% <caret-up class="caret" fill="red" /></div>
-        <canvas ref="searchCount" height="46"></canvas>
-      </a-col>
-      <a-col :span="11" :offset="2">
-        <div>
-          人均搜索次数
-          <a-tooltip>
-            <template slot='title'>
-              指标说明
-            </template>
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </div>
-        <div class="number-data"><label>{{2.7 | formatNumber}}</label> 2.4% <caret-down class="caret" fill="green" /></div>
-        <canvas ref="searchAverage" height="46"></canvas>
-      </a-col>
-    </a-row>
-    <a-table
-      class="search-key-table"
-      :columns="columns"
-      :dataSource="tableData"
-      :pagination="false"
-      size="small"
-      @change="changeTable"
-    >
-    </a-table>
+    <a-skeleton :loading="!tableData" active :paragraph="{rows: 9}">
+      <div>
+        <a-row>
+          <a-col :span="11">
+            <div>
+              搜索用户数
+              <a-tooltip>
+                <template slot='title'>
+                  指标说明
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </div>
+            <div class="number-data">
+              <label>{{usersSearch.count | formatNumber}}</label> 
+              {{ usersSearch.trend | formatPercent }} 
+              <caret-up v-if="usersSearch.trend >= 0" class="caret" fill="red" />
+              <caret-down v-else class="caret" fill="green" />
+            </div>
+            <canvas ref="searchCount" height="46"></canvas>
+          </a-col>
+          <a-col :span="11" :offset="2">
+            <div>
+              人均搜索次数
+              <a-tooltip>
+                <template slot='title'>
+                  指标说明
+                </template>
+                <a-icon type="info-circle" />
+              </a-tooltip>
+            </div>
+            <div class="number-data">
+              <label>{{average.count | formatNumber}}</label> 
+              {{ average.trend | formatPercent }}
+              <caret-up v-if="average.trend >= 0" class="caret" fill="red" />
+              <caret-down v-else class="caret" fill="green" />
+            </div>
+            <canvas ref="searchAverage" height="46"></canvas>
+          </a-col>
+        </a-row>
+        <a-table
+          class="search-key-table"
+          :columns="columns"
+          :dataSource="tableData"
+          :pagination="false"
+          size="small"
+          @change="changeTable"
+        >
+        </a-table>
+        <a-pagination v-model="page" class="analysis-searchkey-pagination" size="small" :total="total" @change="changePagination" />
+      </div>
+    </a-skeleton>
   </a-card>
 </template>
 
@@ -78,6 +93,9 @@ export default {
     const res = await getAnalysisSearch();
     if(res.data.code && res.data.code === 20000){
       this.tableData = res.data.data.list;
+      this.usersSearch = res.data.data.usersSearch;
+      this.average = res.data.data.average;
+      this.total = res.data.data.total;
       setTimeout(()=>{
         this.setSearchCountChartData(res.data.data.usersSearch.datasets);
         this.setSearchAverageChartData(res.data.data.average.datasets);
@@ -88,6 +106,12 @@ export default {
     return{
       columns,
       tableData: [],
+      usersSearch: {},
+      average: {},
+      total: 0,
+      sortKey: '',
+      sort: '',
+      page: 1
     }
   },
   methods: {
@@ -200,9 +224,14 @@ export default {
         'ascend': 'asc',
         'descend': 'descend',
       };
-      const order = mapOrder[sorter.order] || '';
-      const res = await getAnalysisSearch({ query: { key: sorter.columnKey, sort: order } });
-      console.log(res)
+      this.sortKey = sorter.columnKey;
+      this.sort = mapOrder[sorter.order] || '';
+      const res = await getAnalysisSearch({ query: { key: this.sortKey, sort: this.sort } });
+      this.tableData = res.data.data.list;
+      this.page = 1;
+    },
+    async changePagination(page){
+      const res = await getAnalysisSearch({ query: { key: this.sortKey, sort: this.sort, page } });
       this.tableData = res.data.data.list;
     }
   }
@@ -229,5 +258,10 @@ export default {
     .search-key-table{
       margin: 20px 0 0;
     }
+  }
+  .analysis-searchkey-pagination{
+    margin: 10px 0 0;
+    display: flex;
+    justify-content: flex-end;
   }
 </style>

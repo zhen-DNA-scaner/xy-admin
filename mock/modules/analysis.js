@@ -136,34 +136,19 @@ export default [{
 },{
   url: /\/api\/analysis\/search/,
   type: 'get',
-  response: ({ url }) => {
-    const { key, sort } = getQueryObject(url);
-    let list = [{
-      key: '搜索关键词-0',
-      rank: 1,
-      userCount: 980,
-      weekTrend: -0.4
-    },{
-      key: '搜索关键词-1',
-      rank: 2,
-      userCount: 861,
-      weekTrend: 5.5
-    },{
-      key: '搜索关键词-2',
-      rank: 3,
-      userCount: 579,
-      weekTrend: 2.8
-    },{
-      key: '搜索关键词-3',
-      rank: 4,
-      userCount: 511,
-      weekTrend: 0.5
-    },{
-      key: '搜索关键词-4',
-      rank: 5,
-      userCount: 561,
-      weekTrend: -0.78
-    }];
+  response: ({ url, Random }) => {
+    const { key, sort, page = 1 } = getQueryObject(url);
+    const pageSize = 5;
+    let list = [];
+    for(let i = 1; i <= pageSize; i++){
+      const rank = (page - 1) * pageSize + i;
+      list.push({
+        key: `搜索关键词-${rank}`,
+        rank,
+        userCount: Random.integer(511, 908),
+        weekTrend: Random.float(-0.4, 5.5, 0, 2)
+      })
+    }
 
     if(key && sort)
       list = list.sort((a, b) => sort === 'asc' ? b[key] - a[key] : a[key] - b[key]);
@@ -187,7 +172,8 @@ export default [{
             data: [1,3,4,6,3,7,2]
           }
         },
-        list
+        list,
+        total: 50
       }
     }
   }
