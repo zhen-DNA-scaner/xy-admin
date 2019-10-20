@@ -72,7 +72,8 @@ export default [{
       code: 20000,
       data: {
         nickName: userName,
-        roles: user.roles
+        roles: user.roles,
+        avatarUrl: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
       }
     }
   }
@@ -116,6 +117,50 @@ export default [{
         _id: Random.id(),
         roles: ['admin']
       }
+    }
+  }
+}, {
+  url: '/api/userdynamic',
+  type: 'get',
+  response: ({ Random }) => {
+    return {
+      code: 20000,
+      data: [{
+        _id: Random.id(),
+        status: 'info',
+        createTime: '2015-09-05',
+        action: `
+          <p>Technical testing 1</p>
+          <p>Technical testing 2</p>
+          <p>Technical testing 3 2015-09-01</p>
+        `
+      },{
+        _id: Random.id(),
+        status: 'error',
+        createTime: '2015-09-04',
+        action: `
+          <p>Solve initial network problems 1.</p>
+          <p>Solve initial network problems 2.</p>
+          <p>Solve initial network problems 3.</p>
+          <p>Solve initial network problems 4.</p>
+          <p>Solve initial network problems 5.</p>
+        `
+      },{
+        _id: Random.id(),
+        status: 'success',
+        createTime: '2015-09-03',
+        action: `回复<a href="https://baidu.com" target="_blank">《如何站在巨人的肩膀上做事》</a>成功。`
+      },{
+        _id: Random.id(),
+        status: 'success',
+        createTime: '2015-09-02',
+        action: `成功发表文章<a href="https://baidu.com" target="_blank">《如何站在巨人的肩膀上做事》</a>。`
+      },{
+        _id: Random.id(),
+        status: 'success',
+        createTime: '2015-09-01',
+        action: '恭喜您成功被授权为管理员，拥有平台管理、编辑权限。'
+      }]
     }
   }
 }]

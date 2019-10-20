@@ -1,8 +1,20 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view v-if="$router.currentRoute.meta.layout === 'none'"/>
+    <Layout v-else>
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
+    </Layout>
   </div>
 </template>
+
+<script>
+import Layout from './views/layout';
+export default {
+  components: { Layout }
+}
+</script>
 
 <style lang="scss">
 #app {

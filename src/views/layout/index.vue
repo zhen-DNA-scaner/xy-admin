@@ -7,22 +7,24 @@
       class="layout-leftnav"
     >
       <div class="logo">
-        <img src="img/logo/logo-mini.svg" />
+        <img :src="require('../../assets/img/logo-mini.svg')" />
         <b v-show="!collapsed">{{ $t('logo') }}</b>
       </div>
       <a-menu
       class="menu"
-      :defaultSelectedKeys="['sub1-1-1']"
-      :defaultOpenKeys="['sub1']"
+      v-model="currentMenu"
+      :openKeys.sync="currentOpenMenu"
       mode="inline"
       theme="dark"
       :inlineCollapsed="collapsed"
+      @click="changeMenuItem"
     >
-      <a-sub-menu key="sub1">
+      <a-sub-menu key="dashboard">
         <span slot="title"><a-icon type="dashboard" /><span>{{ $t('menu.dashboard') }}</span></span>
-        <a-menu-item key="sub1-1-1"><router-link to="/">{{ $t('menu.analysis') }}</router-link></a-menu-item>
-        <a-menu-item key="sub1-1-2">{{ $t('menu.monitor') }}</a-menu-item>
-        <a-menu-item key="sub1-1-3">{{ $t('menu.workbench') }}</a-menu-item>
+        <a-menu-item key="">{{ $t('menu.analysis') }}</a-menu-item>
+        <!-- <a-menu-item key="sub1-1-1"><router-link to="/">{{ $t('menu.analysis') }}</router-link></a-menu-item> -->
+        <!-- <a-menu-item key="sub1-1-2">{{ $t('menu.monitor') }}</a-menu-item>
+        <a-menu-item key="sub1-1-3">{{ $t('menu.workbench') }}</a-menu-item> -->
       </a-sub-menu>
       <a-sub-menu key="sub2">
         <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
@@ -53,13 +55,14 @@
         <a-menu-item key="sub6-1-2">404</a-menu-item>
         <a-menu-item key="sub6-1-3">500</a-menu-item>
       </a-sub-menu>
-      <a-sub-menu key="sub7">
+      <a-sub-menu key="account">
         <span slot="title"><a-icon type="user" /><span>{{ $t('menu.personal') }}</span></span>
-        <a-menu-item key="sub7-1-1">{{ $t('menu.personalcenter') }}</a-menu-item>
-        <a-menu-item key="sub7-1-2">{{ $t('menu.personalsetting') }}</a-menu-item>
+        <a-menu-item key="center">{{ $t('menu.personalcenter') }}</a-menu-item>
+        <a-menu-item key="setting">{{ $t('menu.personalsetting') }}</a-menu-item>
       </a-sub-menu>
       <a-menu-item v-if="$auth(['admin'])" key="permission">
-        <router-link to="/permission"><a-icon type="key" /><span>{{ $t('menu.permission') }}</span></router-link>
+        <a-icon type="key" /><span>{{ $t('menu.permission') }}</span>
+        <!-- <router-link to="/permission"><a-icon type="key" /><span>{{ $t('menu.permission') }}</span></router-link> -->
       </a-menu-item>
     </a-menu>
     </a-layout-sider>
@@ -109,7 +112,7 @@
                       <router-link to="/notice">查看更多</router-link>
                     </div>
                   </template>
-                  <message-none v-else class="mesaage-none"><p>没有通知哟</p></message-none>
+                  <data-none v-else><p>没有通知哟</p></data-none>
                 </a-tab-pane>
                 <a-tab-pane :tab="`消息 (${messageCount})`" key="message">
                   <template v-if="message.length > 0">
@@ -128,7 +131,7 @@
                       <router-link to="/message">查看更多</router-link>
                     </div>
                   </template>
-                  <message-none v-else class="mesaage-none"><p>没有消息哟</p></message-none>
+                  <data-none v-else><p>没有消息哟</p></data-none>
                 </a-tab-pane>
                 <a-tab-pane :tab="`待办 (${todoCount})`" key="todo">
                   <template v-if="todo.length > 0">
@@ -146,19 +149,19 @@
                       <router-link to="/todo">查看更多</router-link>
                     </div>
                   </template>
-                  <message-none v-else class="mesaage-none"><p>事情都干完了哟</p></message-none>
+                  <data-none v-else><p>事情都干完了哟</p></data-none>
                 </a-tab-pane>
               </a-tabs>
             </div>
           </dropdown>
           <a-dropdown class="avatar-wraper">
             <div>
-              <a-avatar class="avatar" size="small" :src="'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'" />
+              <a-avatar class="avatar" size="small" icon="user" :src="user.avatarUrl" />
               {{ user.nickName || user.email }}
             </div>
             <a-menu slot="overlay" @click="extendAccount">
               <a-menu-item key="user">
-                <router-link to="/user">
+                <router-link to="/center">
                   <a-icon type="user" /> 个人中心
                 </router-link>
               </a-menu-item>
@@ -202,6 +205,32 @@
 import debounce from 'lodash/debounce';
 import { getNotice, getMessage, getTodo, search } from '@/utils/api';
 export default {
+  mounted(){
+    const that = this;
+    const mapMessageList = ['notice', 'message', 'todo'];
+    const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
+
+    Promise.all([
+      getNotice(),
+      getMessage(),
+      getTodo(),
+    ]).then(res => {
+      res.forEach((v, i) => {
+        if (v.data.data) {
+          that[mapMessageCount[i]] = v.data.data.count;
+          that[mapMessageList[i]] = v.data.data.list || [];
+        }
+      })
+    })
+
+    // 设置左边菜单初始化高亮
+    setTimeout(()=>{
+      const keyPath = this.$router.currentRoute.path.split('/');
+      keyPath.shift();
+      this.currentOpenMenu = [keyPath[0] || 'dashboard'];
+      this.currentMenu = [keyPath[1] || ''];
+    }, 1000)
+  },
   data(){
     return {
       collapsed: false,
@@ -230,26 +259,10 @@ export default {
         'undo': '未开始',
         'doing': '进行中',
         'done': '已完成'
-      }
+      },
+      currentMenu: [],
+      currentOpenMenu: []
     }
-  },
-  async created(){
-    const that = this;
-    const mapMessageList = ['notice', 'message', 'todo'];
-    const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
-    const promise = [
-      getNotice(),
-      getMessage(),
-      getTodo(),
-    ];
-    Promise.all(promise).then(res => {
-      res.forEach((v, i) => {
-        if (v.data.data) {
-          that[mapMessageCount[i]] = v.data.data.count;
-          that[mapMessageList[i]] = v.data.data.list || [];
-        }
-      })
-    })
   },
   computed: {
     searchSelectClass(){
@@ -294,11 +307,16 @@ export default {
           this.$router.replace('/login');
           break;
       }
+    },
+    changeMenuItem ({key, keyPath}){
+      this.$router.push(`/${key ? keyPath.reverse().join('/') : ''}`);
     }
   }
 }
 </script>
 <style lang="scss">
+$navHeight: 50px;
+
 #layout-default{
   height: 100vh;
 }
@@ -345,225 +363,216 @@ export default {
   margin: 20px; 
   min-height: 280px;
 }
-$navHeight: 50px;
-.header-nav{
-  background: #fff;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
-  height: 50px;
-  position: relative;
-  z-index: 99;
-  .icon{
-    font-size: 18px;
-  }
-  .collapse-btn{
-    cursor: pointer;
-    display: inline-block;
-    height: 100%;
-    width: 50px;
-    text-align: center;
-    line-height: 50px;
-  }
-  .right-wraper{
-    display: flex;
-    height: 100%;
-    align-items: center;
-  }
-  .right-icon-wraper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: $navHeight - 5px;
-    color: $text-color;
-    cursor: pointer;
-    text-align: center;
-    height: 100%;
-    &:hover{
-      background-color: rgba(0,0,0,0.03);
-    }
-  }
 
-  .search-wraper{
-    cursor: pointer;
+#layout-default {
+  .header-nav{
+    background: #fff;
+    padding: 0;
     display: flex;
     align-items: center;
-    height: 100%;
-    min-width: 45px;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    height: 50px;
+    position: relative;
+    z-index: 99;
     .icon{
       font-size: 18px;
+    }
+    .collapse-btn{
+      cursor: pointer;
+      display: inline-block;
+      height: 100%;
+      width: 50px;
+      text-align: center;
+      line-height: 50px;
+    }
+    .right-wraper{
       display: flex;
       height: 100%;
-      width: 100%;
+      align-items: center;
+    }
+    .right-icon-wraper {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding-right: 5px;
+      width: $navHeight - 5px;
+      color: $text-color;
+      cursor: pointer;
+      text-align: center;
+      height: 100%;
+      &:hover{
+        background-color: rgba(0,0,0,0.03);
+      }
     }
-  }
-  .search-input-wraper{
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  .search-select{
-    width: 0px;
-    transition: width .2s;
-    overflow: hidden;
-    border: 0;
-    outline: 0;
-    border-bottom: solid 1px #eee;
-    padding: 5px 0;
-    height: 34px;
-    &.extended{
+
+    .search-wraper{
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      min-width: 45px;
+      .icon{
+        font-size: 18px;
+        display: flex;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        padding-right: 5px;
+      }
+    }
+    .search-input-wraper{
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .search-select{
+      width: 0px;
+      transition: width .2s;
+      overflow: hidden;
+      border: 0;
+      outline: 0;
+      border-bottom: solid 1px #eee;
+      padding: 5px 0;
+      height: 34px;
+      &.extended{
+        width: 260px;
+      }
+    }
+    .search-tips{
+      padding: 4px 0!important;
       width: 260px;
-    }
-  }
-  .search-tips{
-    padding: 4px 0!important;
-    width: 260px;
-    li{
-      padding: 10px 12px;
-      word-break: break-all;
-      line-height: 1.5;
-      &:hover{
-        background-color: #e6f7ff;
+      li{
+        padding: 10px 12px;
+        word-break: break-all;
+        line-height: 1.5;
+        &:hover{
+          background-color: #e6f7ff;
+        }
       }
     }
-  }
-  .result-none{
-    color: $disabled-color;
-    text-align: center;
-  }
-  .bell-badge{
-    width: 100%;
-  }
-  .bell-more-wraper{
-    display: flex;
-    border-top: solid 1px #eee;
-    height: 3em;
-    line-height: 3em;
-    span{
-      color: #666;
-      &:hover{
-        color: #000;
-      }
-    }
-    a, span{
-      flex: 1;
+    .result-none{
+      color: $disabled-color;
       text-align: center;
     }
-  }
-  .mesaage-none{
-    text-align: center;
-    color: #ccc;
-    margin: 40px 0 60px;
-    svg{
-      font-size: 60px!important;
-    }
-    p{
-      color: #ccc;
-    }
-  }
-  .message-ul{
-    list-style: none;
-    margin: -15px 0 0;
-    padding: 0;
-    text-align: left;
-    max-height: 300px;
-    height: auto!important;
-    @include scrollbar;
-    li{
-      padding: .8em 1.2em;
-      display: flex;
-      align-items: center;
-      border-bottom: solid 1px #eee;
-      &:last-of-type{
-        border: 0;
-      }
-      &:hover{
-        background-color: rgba(0,0,0,0.02);
-      }
-    }
-    p{
-      font-size: 12px;
-      color: $text-color-secondary;
-      margin: 5px 0 0;
-    }
-    h4{
-      @include lineover;
-      margin: 0;
-    }
-  }
-  .notice-wraper{
-    .label{
-      width: 34px;
-      flex: 0 0 34px;
-      height: 34px;
-      background-color: rgba(0,0,0,0.4);
-      border-radius: 50%;
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 18px;
-      opacity: .75;
-      &.warning{
-        background-color: $warning-color;
-      }
-      &.info{
-        background-color: $link-color;
-      }
-      &.success{
-        background-color: $success-color;
-      }
-      &.danger{
-        background-color: $error-color;
-      }
-    }
-  }
-  .message-wraper{
-    li{
-      display: flex;
-      align-items: flex-start;
-    }
-    .avatar{
-      margin-right: 10px;
-    }
-  }
-  .todo-wraper{
-    li{
-      display: block;
-    }
-    .title-wraper{
+    .bell-badge{
       width: 100%;
+    }
+    .bell-more-wraper{
+      display: flex;
+      border-top: solid 1px #eee;
+      height: 3em;
+      line-height: 3em;
+      span{
+        color: #666;
+        &:hover{
+          color: #000;
+        }
+      }
+      a, span{
+        flex: 1;
+        text-align: center;
+      }
+    }
+    .message-ul{
+      list-style: none;
+      margin: -15px 0 0;
+      padding: 0;
+      text-align: left;
+      max-height: 300px;
+      height: auto!important;
+      @include scrollbar;
+      li{
+        padding: .8em 1.2em;
+        display: flex;
+        align-items: center;
+        border-bottom: solid 1px #eee;
+        &:last-of-type{
+          border: 0;
+        }
+        &:hover{
+          background-color: rgba(0,0,0,0.02);
+        }
+      }
+      p{
+        font-size: 12px;
+        color: $text-color-secondary;
+        margin: 5px 0 0;
+      }
+      h4{
+        @include lineover;
+        margin: 0;
+      }
+    }
+    .notice-wraper{
+      .label{
+        width: 34px;
+        flex: 0 0 34px;
+        height: 34px;
+        background-color: rgba(0,0,0,0.4);
+        border-radius: 50%;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+        opacity: .75;
+        &.warning{
+          background-color: $warning-color;
+        }
+        &.info{
+          background-color: $link-color;
+        }
+        &.success{
+          background-color: $success-color;
+        }
+        &.danger{
+          background-color: $error-color;
+        }
+      }
+    }
+    .message-wraper{
+      li{
+        display: flex;
+        align-items: flex-start;
+      }
+      .avatar{
+        margin-right: 10px;
+      }
+    }
+    .todo-wraper{
+      li{
+        display: block;
+      }
+      .title-wraper{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      h4{
+        margin: 0 10px 5px 0;
+      }
+    }
+    .message-container{
+      width: 360px;
+    }
+    .avatar-wraper{
+      margin: 0 15px;
+      font-size: $font-size-base - 1px;
+      cursor: pointer;
+      height: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      .avatar{
+        margin-right: 5px;
+      }
     }
-    h4{
-      margin: 0 10px 5px 0;
-    }
-  }
-  .message-container{
-    width: 360px;
-  }
-  .avatar-wraper{
-    margin: 0 10px 0 30px;
-    font-size: $font-size-base - 1px;
-    cursor: pointer;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    .avatar{
+    .language-wraper{
       margin-right: 5px;
     }
-  }
-  .language-wraper{
-    margin-right: 5px;
   }
 }
 </style>

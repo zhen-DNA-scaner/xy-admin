@@ -3,10 +3,10 @@
 */
 
 export const components = {
-  layout: () => import('@/views/layout/index.vue'),
+  // layout: () => import('@/views/layout/index.vue'),
   dropdown: () => import('./dropdown/index.vue'),
   loading: () => import('./feedback/loading/index.vue'),
-  'message-none': () => import('./icons/message-none.vue'),
+  'data-none': () => import('./feedback/none/index.vue'),
 };
 
 export default Vue => {

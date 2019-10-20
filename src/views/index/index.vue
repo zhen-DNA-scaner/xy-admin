@@ -1,5 +1,5 @@
 <template>
-  <layout>
+  <div>
     <card />
     <sales-card />
     <a-row class="analysis-sales-container" type="flex" :gutter="20">
@@ -7,7 +7,7 @@
       <a-col :span="12"><category /></a-col>
     </a-row>
     <stores />
-  </layout>
+  </div>
 </template>
 
 <script>

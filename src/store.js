@@ -16,7 +16,8 @@ export default new Vuex.Store({
         if (user && user.roles) return user.roles;
       }
       return [];
-    }
+    },
+    user: state => state.user,
   },
   mutations: {
     setUser(state, payload){

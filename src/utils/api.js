@@ -18,6 +18,7 @@ export const forget = ({body}) => axios.post('/api/forget', body);
 
 // user
 export const getUser = ({path}) => axios.get(`/api/user/${path}`);
+export const getUserDynamic = () => axios.get(`/api/userdynamic`);
 
 // admin
 export const search = ({query}) => axios.get(`/api/search?${encodeQuery(query)}`);

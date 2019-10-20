@@ -11,11 +11,13 @@ import filter from '@/filter';
 import hasPermission from '@/utils/permission';
 import VueI18n from 'vue-i18n';
 import storage from '@/utils/storage';
-const mock = () => import('../mock');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-if (isDev) mock();
+if (isDev) {
+  require('../mock');
+}
+
 Vue.use(antUI);
 Vue.use(components);
 Vue.use(directive);

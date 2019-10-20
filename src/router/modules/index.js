@@ -1,15 +1,19 @@
 /*
  * @attribute {roles} Access router permissions, default have all permissions
 */
+import account from './account';
 
-export default [{
+const index = [{
   path: '/',
   name: 'home',
   component: () => import('@/views/index/index.vue')
 },{
   path: '/login',
   name: 'login',
-  component: () => import('@/views/login/index.vue')
+  component: () => import('@/views/login/index.vue'),
+  meta: {
+    layout: 'none'
+  }
 },{
   path: '/403',
   name: '403',
@@ -22,4 +26,9 @@ export default [{
   meta: [{
     roles: ['admin', 'editor']
   }]
-}]
+}];
+
+export default [
+  ...index,
+  ...account
+]

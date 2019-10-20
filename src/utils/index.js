@@ -68,3 +68,14 @@ export function getCurrentDateRange({type = 'today', callback = ()=>{}} = {}){
   callback(dateRange)
   return dateRange;
 }
+
+/**
+ * @description 获取随机整数
+ */
+export class Random {
+  static int(min, max){
+    var range = max - min;
+    var rand = Math.random();
+    return(min + Math.round(rand * range));
+  }
+}
