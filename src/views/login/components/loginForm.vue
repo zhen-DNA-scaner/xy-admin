@@ -14,7 +14,7 @@
           'userName',
           { rules: [{ required: true, message: '用户名不能为空!' }] }
         ]"
-        placeholder="用户名/邮箱"
+        placeholder="手机/邮箱/用户名"
         size="large"
       >
         <a-icon

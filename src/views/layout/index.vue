@@ -222,14 +222,6 @@ export default {
         }
       })
     })
-
-    // 设置左边菜单初始化高亮
-    setTimeout(()=>{
-      const keyPath = this.$router.currentRoute.path.split('/');
-      keyPath.shift();
-      this.currentOpenMenu = [keyPath[0] || 'dashboard'];
-      this.currentMenu = [keyPath[1] || ''];
-    }, 1000)
   },
   data(){
     return {
@@ -278,6 +270,12 @@ export default {
     }
   },
   watch: {
+    $route(r){
+      const keyPath = r.path.split('/');
+      keyPath.shift();
+      this.currentOpenMenu = [keyPath[0] || 'dashboard'];
+      this.currentMenu = [keyPath[1] || ''];
+    },
     searchExtended(extended){
       if(extended) document.body.addEventListener('click', this.globalClickHandle);
       else document.body.removeEventListener('click', this.globalClickHandle);
@@ -349,7 +347,7 @@ $navHeight: 50px;
   }
   footer{
     text-align: center;
-    padding: 80px 0 40px;
+    padding: 50px 0 40px;
     color: #999;
   }
 }
