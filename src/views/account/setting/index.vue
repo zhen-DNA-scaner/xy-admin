@@ -19,6 +19,7 @@
                   ]} 
                 ]"
                 placeholder="邮箱"
+                :value="user.email"
               />
             </a-form-item>
             <a-form-item label="昵称">
@@ -29,11 +30,12 @@
                     { required: true, message: '请输入昵称' }
                   ]} 
                 ]"
+                :value="user.nickName"
                 placeholder="昵称"
               />
             </a-form-item>
             <a-form-item label="个人简介">
-              <a-input type="textarea" placeholder="个人简介" :autosize="{minRows: 4, maxRows: 4}"/>
+              <a-input type="textarea" placeholder="个人简介" :autosize="{minRows: 4, maxRows: 4}" :value="user.profile"/>
             </a-form-item>
             <a-form-item label="国家/地区">
               <a-select default-value="中国">
@@ -55,6 +57,9 @@
             </a-form-item>
             <a-form-item label="街道地址">
               <a-input placeholder="街道地址" />
+            </a-form-item>
+            <a-form-item label="职位">
+              <a-input placeholder="职位" />
             </a-form-item>
             <a-form-item label="联系电话">
               <div class="phone-wraper">
@@ -79,12 +84,15 @@
       </div>
       <div v-if="current[0] === 'safe'">
         <h2>安全设置</h2>
+        <security />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import security from './security/index';
+
 const provinceData = ['广东省', '福建省'];
 const cityData = {
   '广东省': ['深圳市', '惠州市', '汕头市'],
@@ -92,6 +100,7 @@ const cityData = {
 };
 
 export default {
+  components: { security },
   data(){
     return{
       current: ['base'],

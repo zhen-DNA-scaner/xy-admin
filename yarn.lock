@@ -1360,9 +1360,9 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
     color-convert "^1.9.0"
 
 ant-design-vue@^1.3.17:
-  version "1.3.17"
-  resolved "https://registry.npm.taobao.org/ant-design-vue/download/ant-design-vue-1.3.17.tgz#4c420fd53f5a5bc255e01c16aaf34744f143026b"
-  integrity sha1-TEIP1T9aW8JV4BwWqvNHRPFDAms=
+  version "1.4.2"
+  resolved "https://registry.npm.taobao.org/ant-design-vue/download/ant-design-vue-1.4.2.tgz#4151d4f98ed80910d542242aa08bbf396927f792"
+  integrity sha1-QVHU+Y7YCRDVQiQqoIu/OWkn95I=
   dependencies:
     "@ant-design/icons" "^2.1.1"
     "@ant-design/icons-vue" "^2.0.0"
@@ -1567,9 +1567,9 @@ async-limiter@~1.0.0:
   integrity sha1-3TeelPDbgxCwgpH51kwyCXZmF/0=
 
 async-validator@^3.0.3:
-  version "3.1.0"
-  resolved "https://registry.npm.taobao.org/async-validator/download/async-validator-3.1.0.tgz#447db5eb003cbb47e650f040037a29fc3881ce92"
-  integrity sha1-RH216wA8u0fmUPBAA3op/DiBzpI=
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/async-validator/download/async-validator-3.2.0.tgz#fcbd644e7b5b7c9304d29a4752c3f06214ef0d56"
+  integrity sha1-/L1kTntbfJME0ppHUsPwYhTvDVY=
 
 async@^1.5.2:
   version "1.5.2"
@@ -2788,7 +2788,12 @@ copy-webpack-plugin@^4.6.0:
     p-limit "^1.0.0"
     serialize-javascript "^1.4.0"
 
-core-js@^2.4.0, core-js@^2.5.0, core-js@^2.6.5:
+core-js@^2.4.0:
+  version "2.6.10"
+  resolved "https://registry.npm.taobao.org/core-js/download/core-js-2.6.10.tgz?cache=0&sync_timestamp=1571677651603&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcore-js%2Fdownload%2Fcore-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
+  integrity sha1-iluDkfjMcBPacDQRzltYVwYwDX8=
+
+core-js@^2.5.0, core-js@^2.6.5:
   version "2.6.9"
   resolved "https://registry.npm.taobao.org/core-js/download/core-js-2.6.9.tgz#6b4b214620c834152e179323727fc19741b084f2"
   integrity sha1-a0shRiDINBUuF5Mjcn/Bl0GwhPI=

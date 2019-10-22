@@ -1,6 +1,7 @@
 module.exports = {
   'logo': 'XY Design',
   menu: {
+    'home': 'Home',
     'dashboard': 'Dashboard',
     'analysis': 'Analysis',
     'monitor': 'Monitor',
@@ -22,8 +23,9 @@ module.exports = {
     'fail': 'Failed',
     'exception': 'Exception',
     'personal': 'Personal',
-    'personaltcenter': 'Center',
+    'personalcenter': 'Center',
     'personalsetting': 'Setting',
+    'accountpassword': 'Modify password',
     'permission': 'Permission'
   }
 }

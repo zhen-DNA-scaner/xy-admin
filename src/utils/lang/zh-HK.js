@@ -1,6 +1,7 @@
 module.exports = {
   'logo': '曉月設計',
   menu: {
+    'home': '首頁',
     'dashboard': '儀錶盤',
     'analysis': '分析頁',
     'monitor': '監控台',
@@ -24,6 +25,7 @@ module.exports = {
     'personal': '個人頁',
     'personalcenter': '個人中心',
     'personalsetting': '個人設置',
+    'accountpassword': '修改密碼',
     'permission': '權限管理頁'
   }
 }

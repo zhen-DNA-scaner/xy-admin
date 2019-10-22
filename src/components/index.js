@@ -7,6 +7,7 @@ export const components = {
   dropdown: () => import('./dropdown/index.vue'),
   loading: () => import('./feedback/loading/index.vue'),
   'data-none': () => import('./feedback/none/index.vue'),
+  breadcrumb: () => import('./navigation/breadcrumb.vue'),
 };
 
 export default Vue => {
