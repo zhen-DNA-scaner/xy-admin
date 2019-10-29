@@ -1,5 +1,5 @@
 module.exports = {
-  'logo': '晓月设计',
+  'logo': '晓月IT设计',
   menu: {
     'home': '首页',
     'dashboard': '仪表盘',
@@ -26,6 +26,8 @@ module.exports = {
     'personalcenter': '个人中心',
     'personalsetting': '个人设置',
     'accountpassword': '修改密码',
+    'accountphone': '修改手机号',
+    'accountemail': '修改邮箱',
     'permission': '权限管理页'
   }
 }

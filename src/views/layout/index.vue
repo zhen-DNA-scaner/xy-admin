@@ -204,6 +204,7 @@
 <script>
 import debounce from 'lodash/debounce';
 import { getNotice, getMessage, getTodo, search } from '@/utils/api';
+import { mapActions } from 'vuex';
 export default {
   mounted(){
     const that = this;
@@ -213,7 +214,7 @@ export default {
     Promise.all([
       getNotice(),
       getMessage(),
-      getTodo(),
+      getTodo()
     ]).then(res => {
       res.forEach((v, i) => {
         if (v.data.data) {
@@ -222,6 +223,8 @@ export default {
         }
       })
     })
+    
+    this.getUser();
   },
   data(){
     return {
@@ -282,6 +285,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUser'
+    ]),
     // 全局点击收起搜索框
     globalClickHandle(e){
       if(!this.$refs.search.contains(e.target) && this.searchExtended) this.searchExtended = false;
@@ -342,7 +348,7 @@ $navHeight: 50px;
     font-weight: 900;
     img{
       height: 30px;
-      margin: 16px 16px 16px 28px;
+      margin: 16px 12px 16px 20px;
     }
   }
   footer{

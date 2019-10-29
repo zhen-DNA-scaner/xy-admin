@@ -17,7 +17,8 @@ export const login = ({body}) => axios.post('/api/login', body);
 export const forget = ({body}) => axios.post('/api/forget', body);
 
 // user
-export const getUser = ({path}) => axios.get(`/api/user/${path}`);
+export const getUser = () => axios.get(`/api/user`);
+export const setUser = ({body}) => axios.put(`/api/user`, body);
 export const getUserDynamic = () => axios.get(`/api/userdynamic`);
 
 // admin

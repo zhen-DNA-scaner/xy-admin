@@ -1,5 +1,5 @@
 module.exports = {
-  'logo': 'XY Design',
+  'logo': 'XY IT Design',
   menu: {
     'home': 'Home',
     'dashboard': 'Dashboard',
@@ -26,6 +26,8 @@ module.exports = {
     'personalcenter': 'Center',
     'personalsetting': 'Setting',
     'accountpassword': 'Modify password',
+    'accountphone': 'Modify phone',
+    'accountemail': 'Modify email',
     'permission': 'Permission'
   }
 }

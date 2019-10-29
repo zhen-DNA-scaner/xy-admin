@@ -1,5 +1,5 @@
 module.exports = {
-  'logo': '曉月設計',
+  'logo': '曉月IT設計',
   menu: {
     'home': '首頁',
     'dashboard': '儀錶盤',
@@ -26,6 +26,8 @@ module.exports = {
     'personalcenter': '個人中心',
     'personalsetting': '個人設置',
     'accountpassword': '修改密碼',
+    'accountphone': '修改手機號',
+    'accountemail': '修改郵箱',
     'permission': '權限管理頁'
   }
 }

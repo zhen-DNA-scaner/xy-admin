@@ -23,9 +23,17 @@ export default [{
   url: '/api/captcha',
   type: 'post',
   response: ({ body, Random }) => {
-    const email = body && body.email;
-    if (!email || !validate('email', email)) return {
+    const { email, phone } = body || {};
+    if ( !( email || phone ) ) return {
+      code: 40022
+    }
+    if (email && !validate('email', email)) return {
+      code: 40022,
       errMsg: '邮箱格式错误'
+    }
+    if (phone && !validate('phone', phone)) return {
+      code: 40022,
+      errMsg: '手机格式错误'
     }
     return {
       code: 20000,
@@ -108,15 +116,32 @@ export default [{
     }
   }
 }, {
-  url: '/user',
+  url: '/api/user',
   type: 'get',
   response: ({ Random }) => {
     return {
       code: 20000,
       data: {
         _id: Random.id(),
-        roles: ['admin']
+        roles: ['admin'],
+        job: '前端开发工程师',
+        email: '724953302@qq.com',
+        profile: '',
+        avatarUrl: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        nickName: 'Zepeng Zheng',
+        province: '广东省',
+        city: '惠州市',
+        tags: ['很有想法', '专注设计', '长长长长长长长长长长长长长长长长腿长长长长长长长长长长长长长长长长腿', '巨人']
       }
+    }
+  }
+}, {
+  url: '/api/user',
+  type: 'put',
+  response: ({ body }) => {
+    return {
+      code: 20000,
+      data: body
     }
   }
 }, {

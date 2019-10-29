@@ -55,27 +55,22 @@
       </a-input>
     </a-form-item>
     <a-form-item>
-      <a-row :gutter="8">
-        <a-col :span="14">
-          <a-input
-            v-decorator="[
-              'captcha',
-              {rules: [{ required: true, message: '请输入验证码' }]}
-            ]"
-            placeholder="验证码"
-            size="large"
-          >
-            <a-icon
-              slot="prefix"
-              type="code"
-              style="color: rgba(0,0,0,.25)"
-            />
-          </a-input>
-        </a-col>
-        <a-col :span="10">
-          <a-button block size="large" @click="getCaptcha" :disabled="captchaDisabled">{{captchaText || '发送验证码'}}</a-button>
-        </a-col>
-      </a-row>
+      <captcha @getCaptcha="getCaptcha" size="large">
+        <a-input
+          v-decorator="[
+            'captcha',
+            {rules: [{ required: true, message: '请输入验证码' }]}
+          ]"
+          placeholder="验证码"
+          size="large"
+        >
+          <a-icon
+            slot="prefix"
+            type="code"
+            style="color: rgba(0,0,0,.25)"
+          />
+        </a-input>
+      </captcha>
     </a-form-item>
     <a-form-item>
       <a-button
@@ -93,14 +88,16 @@
 
 <script>
   import { getCaptcha, register } from '@/utils/api';
+  import captcha from '@/components/display/captcha';
   export default {
+    components: {
+      captcha
+    },
     beforeCreate () {
       this.form = this.$form.createForm(this);
     },
     data () {
       return {
-        captchaDisabled: false,
-        captchaText: '',
         message: '',
         messageType: '',
         loading: false,
@@ -129,30 +126,16 @@
           }
         });
       },
-      async getCaptcha () {
+      async getCaptcha (captchaCountdown) {
         this.form.validateFields(['email'], async (err, values) => {
           if(!err){
             if(!this.form.getFieldsValue().email) return false;
-            this.captchaDisabled = true;
             const res = await getCaptcha({ body: { email: values.email } });
-            console.log(res)
-            this.captchaCountdown();
+            if (res.data && res.data.code === 20000)
+              // 开始倒计时
+              captchaCountdown();
           }
         })
-      },
-      captchaCountdown () {
-        let time = 60000;
-        this.captchaText = `${time/1000}s`;
-        const timer = setInterval(()=>{
-          time -= 1000;
-          if(time === 0) {
-            clearInterval(timer);
-            this.captchaText = '';
-            this.captchaDisabled = false;
-          }else{
-            this.captchaText = `${time/1000}s`;
-          }
-        }, 1000);
       },
       handleEmailChange(value){
         let autoCompleteEmail;

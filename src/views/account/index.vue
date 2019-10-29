@@ -11,14 +11,14 @@
                 <p>{{ profile }}</p>
               </div>
               <div class="detail">
-                <p><a-icon type="idcard" /> 前端开发工程师</p>
-                <p><address-icon /> 广东惠州</p>
+                <p><a-icon type="idcard" /> {{ user.job || '暂无职位' }}</p>
+                <p><address-icon /> {{ address }}</p>
               </div>
               <a-divider dashed />
               <div>
                 <h4>标签</h4>
                 <div class="tags-wraper">
-                  <template v-for="(tag, index) in tags">
+                  <template v-for="(tag, index) in user.tags">
                     <a-tooltip v-if="tag.length > 10" :key="tag" :title="tag">
                       <a-tag :key="tag" :closable="index !== 0" :afterClose="() => handleClose(tag)">
                         {{`${tag.slice(0, 10)}...`}}
@@ -73,11 +73,15 @@ export default {
   components: {
     addressIcon
   },
-  async mounted(){
-    const res = await getUserDynamic();
-    if(res.data && res.data.code === 20000){
-      this.dynamicList = res.data.data;
-    }
+  mounted(){
+    Promise.all([
+      getUserDynamic(),
+    ])
+    .then(res => {
+      if(res[0].data && res[0].data.code === 20000){
+        this.dynamicList = res[0].data.data;
+      }
+    })
   },
   data(){
     return{
@@ -86,7 +90,6 @@ export default {
         'success': 'green',
         'error': 'red',
       },
-      tags: ['很有想法', '专注设计', '长长长长长长长长长长长长长长长长腿长长长长长长长长长长长长长长长长腿', '巨人'],
       inputVisible: false,
       inputValue: '',
       dynamicList: null
@@ -101,13 +104,16 @@ export default {
     profile(){
       const profile = this.mapProfile[Random.int(0, 2)];
       return this.user.profile || profile;
-    }
+    },
+    address(){
+      if (!this.user.province && !this.user.city) return '暂无地址';
+      else return this.user.province + this.user.city
+    },
   },
   methods: {
     handleClose(removedTag) {
-      const tags = this.tags.filter(tag => tag !== removedTag);
-      console.log(tags);
-      this.tags = tags;
+      const tags = this.user.tags.filter(tag => tag !== removedTag);
+      this.user.tags = tags;
     },
 
     showInput() {
@@ -123,16 +129,13 @@ export default {
 
     handleInputConfirm() {
       const inputValue = this.inputValue;
-      let tags = this.tags;
+      let tags = this.user.tags;
       if (inputValue && tags.indexOf(inputValue) === -1) {
         tags = [...tags, inputValue];
       }
-      console.log(tags);
-      Object.assign(this, {
-        tags,
-        inputVisible: false,
-        inputValue: '',
-      });
+      this.user.tags = tags;
+      this.inputVisible = false;
+      this.inputValue = '';
     },
   }
 }

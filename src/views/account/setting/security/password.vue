@@ -2,7 +2,7 @@
   <div>
     <breadcrumb :routes="routes"></breadcrumb>
     <div class="account-security-password-content">
-      <a-form :layout="formLayout" :form="form">
+      <a-form layout="horizontal" :form="form">
         <a-form-item
           label="原密码"
           :label-col="formItemLayout.labelCol"
@@ -60,6 +60,7 @@
 
 <script>
 import debounce from 'lodash/debounce';
+import { formItemLayout, buttonItemLayout } from './form-layout';
 
 //校验密码强度
 function checkPassWord(value){
@@ -87,7 +88,6 @@ export default {
   },
   data() {
     return {
-      formLayout: 'horizontal',
       routes: [
         {
           path: '/',
@@ -104,19 +104,8 @@ export default {
     };
   },
   computed: {
-    formItemLayout () {
-      const { formLayout } = this;
-      return formLayout === 'horizontal' ? {
-        labelCol: { span: 9 },
-        wrapperCol: { span: 7 },
-      } : {};
-    },
-    buttonItemLayout () {
-      const { formLayout } = this;
-      return formLayout === 'horizontal' ? {
-        wrapperCol: { span: 14, offset: 9 },
-      } : {};
-    },
+    formItemLayout,
+    buttonItemLayout,
   },
   methods: {
     handleSubmit (e) {
