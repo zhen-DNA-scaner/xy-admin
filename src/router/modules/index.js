@@ -2,6 +2,8 @@
  * @attribute {roles} Access router permissions, default have all permissions
 */
 import account from './account';
+import error from './error';
+import result from './result';
 
 const index = [{
   path: '/',
@@ -30,5 +32,7 @@ const index = [{
 
 export default [
   ...index,
-  ...account
+  ...account,
+  ...error,
+  ...result
 ]

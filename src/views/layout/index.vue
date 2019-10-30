@@ -44,16 +44,16 @@
         <a-menu-item key="sub4-1-1">{{ $t('menu.detailbase') }}</a-menu-item>
         <a-menu-item key="sub4-1-2">{{ $t('menu.detailsenior') }}</a-menu-item>
       </a-sub-menu>
-      <a-sub-menu key="sub5">
+      <a-sub-menu key="result">
         <span slot="title"><a-icon type="check-circle" /><span>{{ $t('menu.result') }}</span></span>
-        <a-menu-item key="sub5-1-1">{{ $t('menu.success') }}</a-menu-item>
-        <a-menu-item key="sub5-1-2">{{ $t('menu.fail') }}</a-menu-item>
+        <a-menu-item key="success">{{ $t('menu.success') }}</a-menu-item>
+        <a-menu-item key="fail">{{ $t('menu.fail') }}</a-menu-item>
       </a-sub-menu>
-      <a-sub-menu key="sub6">
+      <a-sub-menu key="error">
         <span slot="title"><a-icon type="warning" /><span>{{ $t('menu.exception') }}</span></span>
-        <a-menu-item key="sub6-1-1">403</a-menu-item>
-        <a-menu-item key="sub6-1-2">404</a-menu-item>
-        <a-menu-item key="sub6-1-3">500</a-menu-item>
+        <a-menu-item key="403">403</a-menu-item>
+        <a-menu-item key="404">404</a-menu-item>
+        <a-menu-item key="500">500</a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="account">
         <span slot="title"><a-icon type="user" /><span>{{ $t('menu.personal') }}</span></span>
