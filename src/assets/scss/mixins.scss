@@ -25,3 +25,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+@mixin contentPannel(){
+  background-color: #fff;
+  padding: 30px;
+  min-height: 560px;
+}

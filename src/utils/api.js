@@ -20,6 +20,10 @@ export const forget = ({body}) => axios.post('/api/forget', body);
 export const getUser = () => axios.get(`/api/user`);
 export const setUser = ({body}) => axios.put(`/api/user`, body);
 export const getUserDynamic = () => axios.get(`/api/userdynamic`);
+export const setUserPassword = ({body}) => axios.put(`/api/user/password`, body);
+export const sendCaptcha = ({params}) => axios.post(`/api/sendCaptcha/${params}`);
+export const validateCaptcha = ({params}) => axios.post(`/api/validateCaptcha/${params}`);
+export const setUserEmail = ({body}) => axios.put(`/api/user/email`, body);
 
 // admin
 export const search = ({query}) => axios.get(`/api/search?${encodeQuery(query)}`);

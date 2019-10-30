@@ -2,9 +2,10 @@
   <div id="app">
     <router-view v-if="$router.currentRoute.meta.layout === 'none'"/>
     <Layout v-else>
-      <keep-alive>
+      <router-view/>
+      <!-- <keep-alive>
         <router-view/>
-      </keep-alive>
+      </keep-alive> -->
     </Layout>
   </div>
 </template>

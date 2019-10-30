@@ -5,23 +5,24 @@
         账户密码
         <router-link to="/account/setting/password">修改</router-link>
       </div>
-      <p>当前密码强度：弱</p>
+      <p>当前密码强度：{{mapPasswordStrength[user.passwordStrenth]}}</p>
     </div>
     <a-divider />
-    <div class="item">
+    <!-- <div class="item">
       <div class="header">
         密保手机
-        <router-link to="/account/setting/phone">修改</router-link>
+        <router-link to="/account/setting/phone">{{user.phone ? '修改' : '绑定'}}</router-link>
       </div>
-      <p>已绑定手机：156****5661</p>
+      <p v-if="user.phone">已绑定手机：{{user.phone}}</p>
+      <p v-else>未绑定手机</p>
     </div>
-    <a-divider />
+    <a-divider /> -->
     <div class="item">
       <div class="header">
-        备用邮箱
+        绑定邮箱
         <router-link to="/account/setting/email">修改</router-link>
       </div>
-      <p>已绑定邮箱：724***302@qq.com</p>
+      <p>已绑定邮箱：{{user.email}}</p>
     </div>
     <a-divider />
     <!-- <div class="item">
@@ -35,9 +36,29 @@
   </div>
 </template>
 
+<script>
+export default {
+  data(){
+    return{
+      mapPasswordStrength: {
+        'weak': '弱',
+        'good': '中',
+        'strong': '强'
+      }
+    }
+  },
+  computed: {
+    user(){
+      let user = this.$store.getters && this.$store.getters.user;
+      if (!user) user = this.$storage.get('user') || {};
+      return user;
+    },
+  }
+}
+</script>
+
 <style lang="scss">
 .account-security-wraper{
-  min-height: 400px;
   .header{
     display: flex;
     justify-content: space-between;

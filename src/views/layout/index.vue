@@ -74,7 +74,7 @@
           @click="()=> collapsed = !collapsed"
         />
         <div class="right-wraper">
-          <div ref="search" class="search-wraper">
+          <!-- <div ref="search" class="search-wraper">
             <a-icon class="icon" type="search" @click="() => searchExtended = true" />
             <dropdown slot="content" class="search-input-wraper">
               <input v-model="searchKey" :class="searchSelectClass" placeholder="站内搜索" @input="getSearchRes" />
@@ -89,7 +89,7 @@
             <a href="https://github.com/Zepeng-Zheng/xy-admin" target="_blank">
               <a-icon class="icon" type="question-circle" />
             </a>
-          </a-tooltip>
+          </a-tooltip> -->
           <dropdown class="right-icon-wraper">
             <a-badge class="bell-badge" :count="count">
               <a-icon class="icon" type="bell" />
@@ -161,12 +161,12 @@
             </div>
             <a-menu slot="overlay" @click="extendAccount">
               <a-menu-item key="user">
-                <router-link to="/center">
+                <router-link to="/account/center">
                   <a-icon type="user" /> 个人中心
                 </router-link>
               </a-menu-item>
               <a-menu-item key="setting">
-                <router-link to="/setting">
+                <router-link to="/account/setting">
                   <a-icon type="setting" /> 个人设置
                 </router-link>
               </a-menu-item>

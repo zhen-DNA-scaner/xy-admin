@@ -22,7 +22,7 @@ const usersStatic = {
 export default [{
   url: '/api/captcha',
   type: 'post',
-  response: ({ body, Random }) => {
+  response: ({ body }) => {
     const { email, phone } = body || {};
     if ( !( email || phone ) ) return {
       code: 40022
@@ -36,8 +36,25 @@ export default [{
       errMsg: '手机格式错误'
     }
     return {
-      code: 20000,
-      data: Random.id(4)
+      code: 20000
+    }
+  }
+}, {
+  url: /\/api\/sendCaptcha\/.*/,
+  type: 'post',
+  response: () => {
+    // 通过 cookie 权限获取用户邮箱/手机并发送验证码到邮箱
+    return {
+      code: 20000
+    }
+  }
+}, {
+  url: /\/api\/validateCaptcha\/.*/,
+  type: 'post',
+  response: () => {
+    // 通过 cookie 权限获取用户信息并验证验证码
+    return {
+      code: 20000
     }
   }
 }, {
@@ -131,7 +148,9 @@ export default [{
         nickName: 'Zepeng Zheng',
         province: '广东省',
         city: '惠州市',
-        tags: ['很有想法', '专注设计', '长长长长长长长长长长长长长长长长腿长长长长长长长长长长长长长长长长腿', '巨人']
+        tags: ['很有想法', '专注设计', '长长长长长长长长长长长长长长长长腿长长长长长长长长长长长长长长长长腿', '巨人'],
+        passwordStrenth: 'weak', // good strong
+        phone: '156****5661'
       }
     }
   }
@@ -142,6 +161,34 @@ export default [{
     return {
       code: 20000,
       data: body
+    }
+  }
+}, {
+  url: '/api/user/password',
+  type: 'put',
+  response: ({ body }) => {
+    const { password, newPassword, confirm } = body || {};
+    if(!password || !newPassword || !confirm){
+      return{
+        code: 40022
+      }
+    }
+    return{
+      code: 20000
+    }
+  }
+}, {
+  url: '/api/user/email',
+  type: 'put',
+  response: ({ body }) => {
+    const { captcha, newEmail, newEmailCaptcha } = body || {};
+    if(!captcha || !newEmail || !newEmailCaptcha){
+      return{
+        code: 40022
+      }
+    }
+    return{
+      code: 20000
     }
   }
 }, {

@@ -143,8 +143,7 @@ export default {
 
 <style lang="scss">
 .acount-center-left, .acount-dynamic{
-  background: #fff;
-  padding: 30px 20px;
+  @include contentPannel;
   height: 100%;
 }
 .acount-center-left{

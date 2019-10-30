@@ -5,7 +5,7 @@
       <a-menu-item key="safe">安全设置</a-menu-item>
     </a-menu>
     <div class="setting-content">
-      <div v-if="current[0] === 'base'">
+      <div v-show="current[0] === 'base'">
         <h2>基本设置</h2>
         <div class="base-setting-wraper">
           <a-form class="form" layout="vertical" :form="form">
@@ -181,6 +181,7 @@ export default {
   display: flex;
   .menu{
     min-width: 220px;
+    min-height: 560px;
   }
   .ant-menu-item{
     margin-right: -1px;

@@ -30,7 +30,7 @@
           <div v-if="strength" class="password-strength-wraper">
             <label>强度：</label>
             <span :class="strength"></span>
-            <label>{{ strength === 'weak' ? '弱' : strength === 'good' ? '中' : '强' }}</label>
+            <label>{{ mapPasswordStrength[strength] }}</label>
           </div>
         </a-form-item>
         <a-form-item
@@ -49,7 +49,7 @@
         <a-form-item
           :wrapper-col="buttonItemLayout.wrapperCol"
         >
-          <a-button type="primary" html-type="submit">
+          <a-button type="primary" html-type="button" @click="handleSubmit" :loading="submitLoading" :disabled="submitLoading">
             保存
           </a-button>
         </a-form-item>
@@ -61,6 +61,7 @@
 <script>
 import debounce from 'lodash/debounce';
 import { formItemLayout, buttonItemLayout } from './form-layout';
+import { setUserPassword } from '@/utils/api';
 
 //校验密码强度
 function checkPassWord(value){
@@ -100,7 +101,14 @@ export default {
         }
       ],
       strength: '',
-      confirmDirty: false
+      confirmDirty: false,
+      mapPasswordStrength: {
+        'weak': '弱',
+        'good': '中',
+        'strong': '强',
+        '': '弱'
+      },
+      submitLoading: false
     };
   },
   computed: {
@@ -108,13 +116,26 @@ export default {
     buttonItemLayout,
   },
   methods: {
-    handleSubmit (e) {
-      e.preventDefault();
-
+    handleSubmit () {
       this.form.validateFields(async (err, values) => {
+        this.submitLoading = true;
         if (!err) {
-          console.log(values)
+          values.passwordStrenth = this.strength;
+          const res = await setUserPassword({body: values});
+          if(res.data && res.data.code === 20000){
+            this.$message.success('密码修改成功');
+            this.$store.commit('setUser', {passwordStrenth: this.strength})
+          }else{
+            this.$message.error('密码修改失败');
+          }
+          this.form.setFields({
+            password: '',
+            newPassword: '',
+            confirm: ''
+          })
+          this.strength = '';
         }
+        this.submitLoading = false;
       });
     },
     handleBlur(e) {
@@ -131,28 +152,32 @@ export default {
       } else {
         this.strength = '';
       }
-    }, 200),
-    compareToFirstPassword: debounce(function(rule, value, callback){
-      const form = this.form;
-      if (value && value !== form.getFieldValue('newPassword')) {
+    }, 500),
+    validateToNextPassword: debounce(function(rule, value, callback){
+      const confirmPassword = this.form.getFieldValue('confirm')
+      if (value && confirmPassword && value !== confirmPassword) {
         callback('输入的两次新密码不一致!');
       } else {
         callback();
+        this.form.validateFields(['confirm'], err => err && console.log(err));
       }
-    }, 200),
-    validateToNextPassword: debounce(function(rule, value, callback){
-      const form = this.form;
-      if (this.confirmDirty && value) form.validateFields(['confirm'], { force: true });
-      callback();
-    }, 200),
+    }, 500),
+    compareToFirstPassword: debounce(function(rule, value, callback){
+      const firstPassword = this.form.getFieldValue('newPassword');
+      if (value && value !== firstPassword) {
+        callback('输入的两次新密码不一致!');
+      } else {
+        callback();
+        this.form.validateFields(['newPassword'], err => err && console.log(err));
+      }
+    }, 500),
   },
 }
 </script>
 
 <style lang="scss">
 .account-security-password-content{
-  background-color: #fff;
-  padding: 30px;
+  @include contentPannel;
   .password-strength-wraper{
     display: flex;
     justify-content: flex-start;
