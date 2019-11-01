@@ -14,13 +14,14 @@ const apis = [
 const responseContextHandle = response => {
   return ctx => {
     const Random = Mock.Random;
+    const IDPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     Random.extend({
       id: function( n = 12 ) {
-        const IDPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         return Random.string(IDPool, n);
       }
     });
     ctx.Random = Random;
+    ctx.IDPool = IDPool;
     ctx.body = JSON.parse(ctx.body);
     return Mock.mock( response(ctx) )
   }

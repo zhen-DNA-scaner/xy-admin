@@ -33,4 +33,10 @@ export default {
     margin-top: 14px!important;
   }
 }
+.primary{
+  color: $primary-color;
+}
+.error{
+  color: $error-color;
+}
 </style>

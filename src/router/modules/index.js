@@ -4,6 +4,7 @@
 import account from './account';
 import error from './error';
 import result from './result';
+import message from './message';
 
 const index = [{
   path: '/',
@@ -34,5 +35,6 @@ export default [
   ...index,
   ...account,
   ...error,
-  ...result
+  ...result,
+  ...message
 ]

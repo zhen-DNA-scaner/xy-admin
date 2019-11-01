@@ -1,5 +1,11 @@
 module.exports = {
   'logo': '曉月IT設計',
+  normal: {
+    'sitemail': '站內信',
+  },
+  breadcrumb: {
+    'message': '消息中心',
+  },
   menu: {
     'home': '首頁',
     'dashboard': '儀錶盤',

@@ -96,7 +96,7 @@
             </a-badge>
             <div slot="content" class="message-container">
               <a-tabs defaultActiveKey="notice">
-                <a-tab-pane :tab="`通知 (${noticeCount})`" key="notice">
+                <a-tab-pane :tab="`站内信 (${noticeCount})`" key="notice">
                   <template v-if="notice.length > 0">
                     <ul class="message-ul notice-wraper">
                       <li v-for="item in notice" :key="item._id" :title="item.title">
@@ -108,13 +108,13 @@
                       </li>
                     </ul>
                     <div class="bell-more-wraper">
-                      <span @click.stop="() => { noticeCount = 0; notice = []; }">全部已读</span>
-                      <router-link to="/notice">查看更多</router-link>
+                      <span @click.stop="() => { noticeCount = 0; notice = []; }">已读</span>
+                      <router-link to="/message">查看更多</router-link>
                     </div>
                   </template>
                   <data-none v-else><p>没有通知哟</p></data-none>
                 </a-tab-pane>
-                <a-tab-pane :tab="`消息 (${messageCount})`" key="message">
+                <a-tab-pane :tab="`互动 (${messageCount})`" key="message">
                   <template v-if="message.length > 0">
                     <ul class="message-ul message-wraper">
                       <li v-for="item in message" :key="item._id">
@@ -127,8 +127,8 @@
                       </li>
                     </ul>
                     <div class="bell-more-wraper">
-                      <span @click.stop="() => { messageCount = 0; message = []; }">全部已读</span>
-                      <router-link to="/message">查看更多</router-link>
+                      <span @click.stop="() => { messageCount = 0; message = []; }">已读</span>
+                      <router-link to="/message?type=message">查看更多</router-link>
                     </div>
                   </template>
                   <data-none v-else><p>没有消息哟</p></data-none>
@@ -145,7 +145,7 @@
                       </li>
                     </ul>
                     <div class="bell-more-wraper">
-                      <span @click.stop="() => { todoCount = 0; todo = []; }">全部已读</span>
+                      <span @click.stop="() => { todoCount = 0; todo = []; }">已读</span>
                       <router-link to="/todo">查看更多</router-link>
                     </div>
                   </template>
@@ -203,25 +203,33 @@
 </template>
 <script>
 import debounce from 'lodash/debounce';
-import { getNotice, getMessage, getTodo, search } from '@/utils/api';
+import { getSitemail, getMessage, getTodo, search } from '@/utils/api';
 import { mapActions } from 'vuex';
 export default {
   mounted(){
     const that = this;
-    const mapMessageList = ['notice', 'message', 'todo'];
-    const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
+    // const mapMessageList = ['notice', 'message', 'todo'];
+    // const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
 
     Promise.all([
-      getNotice(),
+      getSitemail({query: {isRead: false, limit: 10}}),
       getMessage(),
       getTodo()
     ]).then(res => {
-      res.forEach((v, i) => {
-        if (v.data.data) {
-          that[mapMessageCount[i]] = v.data.data.count;
-          that[mapMessageList[i]] = v.data.data.list || [];
-        }
-      })
+      that.noticeCount = res[0].data.data.noReadCount;
+      that.notice = res[0].data.data.list || [];
+      
+      that.messageCount = res[1].data.data.count;
+      that.message = res[1].data.data.list || [];
+      
+      that.todoCount = res[2].data.data.count;
+      that.todo = res[2].data.data.list || [];
+      // res.forEach((v, i) => {
+      //   if (v.data.data) {
+      //     that[mapMessageCount[i]] = v.data.data.count;
+      //     that[mapMessageList[i]] = v.data.data.list || [];
+      //   }
+      // })
     })
     
     this.getUser();
@@ -484,7 +492,7 @@ $navHeight: 50px;
       margin: -15px 0 0;
       padding: 0;
       text-align: left;
-      max-height: 300px;
+      max-height: 360px;
       height: auto!important;
       @include scrollbar;
       li{

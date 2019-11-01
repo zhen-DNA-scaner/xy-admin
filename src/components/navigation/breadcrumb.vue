@@ -2,12 +2,10 @@
   <div class="xy-breadcrumb">
     <a-breadcrumb :routes="routes">
       <template slot="itemRender" slot-scope="{route}">
-        <router-link v-if="route.path" :to="route">
-          {{ $t(`menu.${route.breadcrumbName}`) }}
+        <router-link v-if="route.multilingual" :to="route">
+          {{ $t(route.multilingual) }}
         </router-link>
-        <span v-else>
-          {{ $t(`menu.${route.breadcrumbName}`) }}
-        </span>
+        <span v-else v-html="route.breadcrumbName"></span>
       </template>
     </a-breadcrumb>
     <slot />

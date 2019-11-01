@@ -60,11 +60,14 @@ export default {
         {
           path: '/',
           breadcrumbName: 'home',
+          multilingual: 'menu.home' // true(boolean) or language file attribute(string)
         },{
           path: '/account/setting',
-          breadcrumbName: 'personalsetting',
+          breadcrumbName: 'setting',
+          multilingual: 'menu.accountpassword'
         },{
-          breadcrumbName: 'accountphone'
+          breadcrumbName: 'phone',
+          multilingual: 'menu.accountphone'
         }
       ],
       captchaText: '',

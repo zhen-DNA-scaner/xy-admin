@@ -1,5 +1,11 @@
 module.exports = {
   'logo': 'XY IT Design',
+  normal: {
+    'sitemail': 'sitemail',
+  },
+  breadcrumb: {
+    'message': 'message center',
+  },
   menu: {
     'home': 'Home',
     'dashboard': 'Dashboard',

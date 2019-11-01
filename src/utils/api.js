@@ -5,7 +5,8 @@ const encodeQuery = query => {
 
   let keyArr = [];
   for(let k in query){
-    if(query[k]) keyArr.push(`${k}=${query[k]}`);
+    const v = query[k];
+    if(v!==null && v!==undefined) keyArr.push(`${k}=${v}`);
   }
   return keyArr.join('&');
 }
@@ -25,11 +26,16 @@ export const sendCaptcha = ({params}) => axios.post(`/api/sendCaptcha/${params}`
 export const validateCaptcha = ({params}) => axios.post(`/api/validateCaptcha/${params}`);
 export const setUserEmail = ({body}) => axios.put(`/api/user/email`, body);
 
-// admin
+// message
 export const search = ({query}) => axios.get(`/api/search?${encodeQuery(query)}`);
-export const getNotice = () => axios.get('/api/notice');
+export const getSitemail = ({query} = {}) => axios.get(`/api/sitemail?${query && encodeQuery(query)}`);
 export const getMessage = () => axios.get('/api/message');
 export const getTodo = () => axios.get('/api/todo');
+export const deleteSitemail = ({body}) => axios.delete('/api/sitemail', body);
+export const setSitemail = ({body}) => axios.put('/api/sitemail', body);
+export const deleteMessage = ({body}) => axios.delete('/api/message', body);
+export const setMessage = ({body}) => axios.put('/api/message', body);
+export const deleteTodo = ({body}) => axios.delete('/api/todo', body);
 
 // analysis
 export const getAnalysis = () => axios.get('/api/analysis');
