@@ -39,6 +39,10 @@ export default {
     sitemailTable,
     messageTable
   },
+  mounted() {
+    const { type } = this.$route.query;
+    this.type = type === 'message' ? type : 'sitemail';
+  },
   data(){
     return{
       type: 'sitemail',

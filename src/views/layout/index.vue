@@ -11,60 +11,60 @@
         <b v-show="!collapsed">{{ $t('logo') }}</b>
       </div>
       <a-menu
-      class="menu"
-      v-model="currentMenu"
-      :openKeys.sync="currentOpenMenu"
-      mode="inline"
-      theme="dark"
-      :inlineCollapsed="collapsed"
-      @click="changeMenuItem"
-    >
-      <a-sub-menu key="dashboard">
-        <span slot="title"><a-icon type="dashboard" /><span>{{ $t('menu.dashboard') }}</span></span>
-        <a-menu-item key="">{{ $t('menu.analysis') }}</a-menu-item>
-        <!-- <a-menu-item key="sub1-1-1"><router-link to="/">{{ $t('menu.analysis') }}</router-link></a-menu-item> -->
-        <!-- <a-menu-item key="sub1-1-2">{{ $t('menu.monitor') }}</a-menu-item>
-        <a-menu-item key="sub1-1-3">{{ $t('menu.workbench') }}</a-menu-item> -->
-      </a-sub-menu>
-      <a-sub-menu key="sub2">
-        <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
-        <a-menu-item key="sub2-1-1">{{ $t('menu.formbase') }}</a-menu-item>
-        <a-menu-item key="sub2-1-2">{{ $t('menu.formstepbystep') }}</a-menu-item>
-        <a-menu-item key="sub2-1-3">{{ $t('menu.formsenior') }}</a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="sub3">
-        <span slot="title"><a-icon type="table" /><span>{{ $t('menu.list') }}</span></span>
-        <a-menu-item key="sub3-1-1">{{ $t('menu.listsearch') }}</a-menu-item>
-        <a-menu-item key="sub3-1-2">{{ $t('menu.querytabel') }}</a-menu-item>
-        <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item>
-        <a-menu-item key="sub3-1-4">{{ $t('menu.listcard') }}</a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="sub4">
-        <span slot="title"><a-icon type="pic-left" /><span>{{ $t('menu.detail') }}</span></span>
-        <a-menu-item key="sub4-1-1">{{ $t('menu.detailbase') }}</a-menu-item>
-        <a-menu-item key="sub4-1-2">{{ $t('menu.detailsenior') }}</a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="result">
-        <span slot="title"><a-icon type="check-circle" /><span>{{ $t('menu.result') }}</span></span>
-        <a-menu-item key="success">{{ $t('menu.success') }}</a-menu-item>
-        <a-menu-item key="fail">{{ $t('menu.fail') }}</a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="error">
-        <span slot="title"><a-icon type="warning" /><span>{{ $t('menu.exception') }}</span></span>
-        <a-menu-item key="403">403</a-menu-item>
-        <a-menu-item key="404">404</a-menu-item>
-        <a-menu-item key="500">500</a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="account">
-        <span slot="title"><a-icon type="user" /><span>{{ $t('menu.personal') }}</span></span>
-        <a-menu-item key="center">{{ $t('menu.personalcenter') }}</a-menu-item>
-        <a-menu-item key="setting">{{ $t('menu.personalsetting') }}</a-menu-item>
-      </a-sub-menu>
-      <a-menu-item v-if="$auth(['admin'])" key="permission">
-        <a-icon type="key" /><span>{{ $t('menu.permission') }}</span>
-        <!-- <router-link to="/permission"><a-icon type="key" /><span>{{ $t('menu.permission') }}</span></router-link> -->
-      </a-menu-item>
-    </a-menu>
+        class="menu"
+        v-model="currentMenu"
+        :openKeys.sync="currentOpenMenu"
+        mode="inline"
+        theme="dark"
+        :inlineCollapsed="collapsed"
+        @click="changeMenuItem"
+      >
+        <a-sub-menu key="dashboard">
+          <span slot="title"><a-icon type="dashboard" /><span>{{ $t('menu.dashboard') }}</span></span>
+          <a-menu-item key="">{{ $t('menu.analysis') }}</a-menu-item>
+          <!-- <a-menu-item key="sub1-1-1"><router-link to="/">{{ $t('menu.analysis') }}</router-link></a-menu-item> -->
+          <!-- <a-menu-item key="sub1-1-2">{{ $t('menu.monitor') }}</a-menu-item>
+          <a-menu-item key="sub1-1-3">{{ $t('menu.workbench') }}</a-menu-item> -->
+        </a-sub-menu>
+        <a-sub-menu key="form">
+          <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
+          <a-menu-item key="base">{{ $t('menu.formbase') }}</a-menu-item>
+          <a-menu-item key="stepbystep">{{ $t('menu.formstepbystep') }}</a-menu-item>
+          <a-menu-item key="senior">{{ $t('menu.formsenior') }}</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="sub3">
+          <span slot="title"><a-icon type="table" /><span>{{ $t('menu.list') }}</span></span>
+          <a-menu-item key="sub3-1-1">{{ $t('menu.listsearch') }}</a-menu-item>
+          <a-menu-item key="sub3-1-2">{{ $t('menu.querytabel') }}</a-menu-item>
+          <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item>
+          <a-menu-item key="sub3-1-4">{{ $t('menu.listcard') }}</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="sub4">
+          <span slot="title"><a-icon type="pic-left" /><span>{{ $t('menu.detail') }}</span></span>
+          <a-menu-item key="sub4-1-1">{{ $t('menu.detailbase') }}</a-menu-item>
+          <a-menu-item key="sub4-1-2">{{ $t('menu.detailsenior') }}</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="result">
+          <span slot="title"><a-icon type="check-circle" /><span>{{ $t('menu.result') }}</span></span>
+          <a-menu-item key="success">{{ $t('menu.success') }}</a-menu-item>
+          <a-menu-item key="fail">{{ $t('menu.fail') }}</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="error">
+          <span slot="title"><a-icon type="warning" /><span>{{ $t('menu.exception') }}</span></span>
+          <a-menu-item key="403">403</a-menu-item>
+          <a-menu-item key="404">404</a-menu-item>
+          <a-menu-item key="500">500</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="account">
+          <span slot="title"><a-icon type="user" /><span>{{ $t('menu.personal') }}</span></span>
+          <a-menu-item key="center">{{ $t('menu.personalcenter') }}</a-menu-item>
+          <a-menu-item key="setting">{{ $t('menu.personalsetting') }}</a-menu-item>
+        </a-sub-menu>
+        <a-menu-item v-if="$auth(['admin'])" key="permission">
+          <a-icon type="key" /><span>{{ $t('menu.permission') }}</span>
+          <!-- <router-link to="/permission"><a-icon type="key" /><span>{{ $t('menu.permission') }}</span></router-link> -->
+        </a-menu-item>
+      </a-menu>
     </a-layout-sider>
     <a-layout class="layout-header-width-content">
       <a-layout-header class="header-nav">
@@ -95,11 +95,11 @@
               <a-icon class="icon" type="bell" />
             </a-badge>
             <div slot="content" class="message-container">
-              <a-tabs defaultActiveKey="notice">
-                <a-tab-pane :tab="`站内信 (${noticeCount})`" key="notice">
-                  <template v-if="notice.length > 0">
-                    <ul class="message-ul notice-wraper">
-                      <li v-for="item in notice" :key="item._id" :title="item.title">
+              <a-tabs defaultActiveKey="sitemail">
+                <a-tab-pane :tab="`站内信 (${sitemailCount})`" key="sitemail">
+                  <template v-if="sitemail.length > 0">
+                    <ul class="message-ul sitemail-wraper">
+                      <li v-for="item in sitemail" :key="item._id" :title="item.title">
                         <span :class="['label', item.type]"><a-icon :type="mapIcons[item.type]" /></span>
                         <div>
                           <h4>{{item.title}}</h4>
@@ -108,7 +108,7 @@
                       </li>
                     </ul>
                     <div class="bell-more-wraper">
-                      <span @click.stop="() => { noticeCount = 0; notice = []; }">已读</span>
+                      <!-- <span @click.stop="() => { sitemailCount = 0; sitemail = []; }">已读</span> -->
                       <router-link to="/message">查看更多</router-link>
                     </div>
                   </template>
@@ -127,13 +127,13 @@
                       </li>
                     </ul>
                     <div class="bell-more-wraper">
-                      <span @click.stop="() => { messageCount = 0; message = []; }">已读</span>
+                      <!-- <span @click.stop="() => { messageCount = 0; message = []; }">已读</span> -->
                       <router-link to="/message?type=message">查看更多</router-link>
                     </div>
                   </template>
                   <data-none v-else><p>没有消息哟</p></data-none>
                 </a-tab-pane>
-                <a-tab-pane :tab="`待办 (${todoCount})`" key="todo">
+                <!-- <a-tab-pane :tab="`待办 (${todoCount})`" key="todo">
                   <template v-if="todo.length > 0">
                     <ul class="message-ul todo-wraper">
                       <li v-for="item in todo" :key="item._id">
@@ -145,12 +145,12 @@
                       </li>
                     </ul>
                     <div class="bell-more-wraper">
-                      <span @click.stop="() => { todoCount = 0; todo = []; }">已读</span>
+                      <span @click.stop="() => { todoCount = 0; todo = []; }">清空待办</span>
                       <router-link to="/todo">查看更多</router-link>
                     </div>
                   </template>
                   <data-none v-else><p>事情都干完了哟</p></data-none>
-                </a-tab-pane>
+                </a-tab-pane> -->
               </a-tabs>
             </div>
           </dropdown>
@@ -203,27 +203,28 @@
 </template>
 <script>
 import debounce from 'lodash/debounce';
-import { getSitemail, getMessage, getTodo, search } from '@/utils/api';
+// import { getSitemail, getMessage, getTodo, search } from '@/utils/api';
+import { getSitemail, getMessage, search } from '@/utils/api';
 import { mapActions } from 'vuex';
 export default {
   mounted(){
     const that = this;
-    // const mapMessageList = ['notice', 'message', 'todo'];
-    // const mapMessageCount = ['noticeCount', 'messageCount', 'todoCount'];
+    // const mapMessageList = ['sitemail', 'message', 'todo'];
+    // const mapMessageCount = ['sitemailCount', 'messageCount', 'todoCount'];
 
     Promise.all([
-      getSitemail({query: {isRead: false, limit: 10}}),
-      getMessage(),
-      getTodo()
+      getSitemail({query: {isRead: false, limit: 15}}),
+      getMessage({query: {isRead: false, limit: 15}}),
+      // getTodo()
     ]).then(res => {
-      that.noticeCount = res[0].data.data.noReadCount;
-      that.notice = res[0].data.data.list || [];
+      that.sitemailCount = res[0].data.data.noReadCount;
+      that.sitemail = res[0].data.data.list || [];
       
       that.messageCount = res[1].data.data.count;
       that.message = res[1].data.data.list || [];
       
-      that.todoCount = res[2].data.data.count;
-      that.todo = res[2].data.data.list || [];
+      // that.todoCount = res[2].data.data.count;
+      // that.todo = res[2].data.data.list || [];
       // res.forEach((v, i) => {
       //   if (v.data.data) {
       //     that[mapMessageCount[i]] = v.data.data.count;
@@ -240,12 +241,12 @@ export default {
       searchExtended: false,
       searchKey: '',
       searchList: [],
-      notice: [],
-      noticeCount:0,
+      sitemail: [],
+      sitemailCount:0,
       message: [],
       messageCount: 0,
-      todo: [],
-      todoCount: 0,
+      // todo: [],
+      // todoCount: 0,
       mapIcons: {
         'warning': 'warning',
         'info': 'exclamation-circle',
@@ -272,7 +273,8 @@ export default {
       return ['search-select', this.searchExtended ? 'extended' : ''];
     },
     count(){
-      return this.noticeCount + this.messageCount + this.todoCount;
+      // return this.sitemailCount + this.messageCount + this.todoCount;
+      return this.sitemailCount + this.messageCount;
     },
     user(){
       let user = this.$store.getters && this.$store.getters.user;
@@ -353,10 +355,10 @@ $navHeight: 50px;
     overflow: hidden;
     word-break:keep-all;
     white-space:nowrap;
-    font-weight: 900;
+    font-weight: 600;
     img{
       height: 30px;
-      margin: 16px 12px 16px 20px;
+      margin: 16px 12px 16px 26px;
     }
   }
   footer{
@@ -367,6 +369,9 @@ $navHeight: 50px;
 }
 .layout-leftnav{
   @include scrollbar(4px, rgba(255,255,255,0.3));
+  width: 220px!important;
+  max-width: 220px!important;
+  flex: 0 0 220px!important;
 }
 .layout-header-width-content{
   @include scrollbar(6px);
@@ -517,7 +522,7 @@ $navHeight: 50px;
         margin: 0;
       }
     }
-    .notice-wraper{
+    .sitemail-wraper{
       .label{
         width: 34px;
         flex: 0 0 34px;
@@ -554,22 +559,22 @@ $navHeight: 50px;
         margin-right: 10px;
       }
     }
-    .todo-wraper{
-      li{
-        display: block;
-      }
-      .title-wraper{
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      h4{
-        margin: 0 10px 5px 0;
-      }
-    }
+    // .todo-wraper{
+    //   li{
+    //     display: block;
+    //   }
+    //   .title-wraper{
+    //     width: 100%;
+    //     display: flex;
+    //     align-items: center;
+    //     justify-content: space-between;
+    //   }
+    //   h4{
+    //     margin: 0 10px 5px 0;
+    //   }
+    // }
     .message-container{
-      width: 360px;
+      width: 340px;
     }
     .avatar-wraper{
       margin: 0 15px;

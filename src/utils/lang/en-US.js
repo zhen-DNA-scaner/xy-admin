@@ -1,5 +1,5 @@
 module.exports = {
-  'logo': 'XY IT Design',
+  'logo': 'XY Design',
   normal: {
     'sitemail': 'sitemail',
   },

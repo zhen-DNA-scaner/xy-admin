@@ -12,9 +12,9 @@
       <a-input
         v-decorator="[
           'userName',
-          { rules: [{ required: true, message: '用户名不能为空!' }] }
+          { rules: [{ required: true, message: '邮箱不能为空!' }] }
         ]"
-        placeholder="手机/邮箱/用户名"
+        placeholder="邮箱"
         size="large"
       >
         <a-icon
