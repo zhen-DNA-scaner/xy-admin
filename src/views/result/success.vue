@@ -1,10 +1,6 @@
 <template>
   <div class="result-page result-page-success">
-    <div class="status-block">
-      <div><span class="icon-wraper"><a-icon type="check" :style="{color: '#fff', fontSize: '1em'}" /></span></div>
-      <h2>提交成功</h2>
-      <p class="gray">提交结果页用于反馈一系列操作任务的处理结果， 如果仅是简单操作，使用 Message 全局提示反馈即可。 本文字区域可以展示简单的补充说明，如果有类似展示 “单据”的需求，下面这个灰色区域可以呈现比较复杂的内容。</p>
-    </div>
+    <status status="success" description="提交结果页用于反馈一系列操作任务的处理结果， 如果仅是简单操作，使用 Message 全局提示反馈即可。 本文字区域可以展示简单的补充说明，如果有类似展示 “单据”的需求，下面这个灰色区域可以呈现比较复杂的内容。"></status>
     <div class="content-wraper">
       <div class="title-info">
         <span>ID: 13412</span>
@@ -22,6 +18,13 @@
     </div>
   </div>
 </template>
+
+<script>
+import status from '@/components/feedback/status/index';
+export default {
+  components: {status}
+}
+</script>
 
 <style lang="scss" src="./result.scss"></style>
 <style lang="scss" scoped>

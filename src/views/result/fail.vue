@@ -1,10 +1,6 @@
 <template>
   <div class="result-page result-page-fail">
-    <div class="status-block">
-      <div><span class="icon-wraper"><a-icon type="close" :style="{color: '#fff', fontSize: '1em'}" /></span></div>
-      <h2>提交失败</h2>
-      <p class="gray">请核对并修改以下信息后，再重新提交。</p>
-    </div>
+    <status status="fail" description="请核对并修改以下信息后，再重新提交。"></status>
     <div class="content-wraper">
       <h3>您提交的内容有如下错误：</h3>
       <p>
@@ -23,6 +19,13 @@
     </div>
   </div>
 </template>
+
+<script>
+import status from '@/components/feedback/status/index';
+export default {
+  components: {status}
+}
+</script>
 
 <style lang="scss" src="./result.scss"></style>
 <style lang="scss" scoped>

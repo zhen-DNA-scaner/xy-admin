@@ -2,37 +2,6 @@
 .result-page{
   @include contentPannel;
   padding: 60px 30px;
-  .status-block{
-    text-align: center;
-    .icon-wraper{
-      display: inline-flex;
-      font-size: 40px;
-      width: 2em;
-      height: 2em;
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      margin: 20px;
-    }
-    h2{
-      font-size: 24px;
-    }
-    .gray{
-      max-width: 800px;
-      color: #999;
-      margin: 0 auto;
-    }
-  }
-  &.result-page-success{
-    .icon-wraper{
-      background: $success-color;
-    }
-  }
-  &.result-page-fail{
-    .icon-wraper{
-      background: $error-color;
-    }
-  }
   .content-wraper{
     max-width: 1000px;
     margin: 40px auto;
