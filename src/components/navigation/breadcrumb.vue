@@ -10,7 +10,7 @@
         </template>
       </template>
     </a-breadcrumb>
-    <p class="bc-tips">{{tips}}</p>
+    <p v-if="tips" class="bc-tips">{{tips}}</p>
     <slot />
   </div>
 </template>

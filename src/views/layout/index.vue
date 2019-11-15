@@ -30,12 +30,11 @@
           <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
           <a-menu-item key="base">{{ $t('menu.formbase') }}</a-menu-item>
           <a-menu-item key="stepbystep">{{ $t('menu.formstepbystep') }}</a-menu-item>
-          <a-menu-item key="senior">{{ $t('menu.formsenior') }}</a-menu-item>
+          <!-- <a-menu-item key="senior">{{ $t('menu.formsenior') }}</a-menu-item> -->
         </a-sub-menu>
-        <a-sub-menu key="sub3">
+        <a-sub-menu key="list">
           <span slot="title"><a-icon type="table" /><span>{{ $t('menu.list') }}</span></span>
-          <a-menu-item key="sub3-1-1">{{ $t('menu.listsearch') }}</a-menu-item>
-          <a-menu-item key="sub3-1-2">{{ $t('menu.querytabel') }}</a-menu-item>
+          <a-menu-item key="query">{{ $t('menu.querytable') }}</a-menu-item>
           <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item>
           <a-menu-item key="sub3-1-4">{{ $t('menu.listcard') }}</a-menu-item>
         </a-sub-menu>
