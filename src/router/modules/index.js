@@ -7,6 +7,7 @@ import result from './result';
 import message from './message';
 import form from './form';
 import list from './list';
+import detail from './detail';
 
 const index = [{
   path: '/',
@@ -40,5 +41,6 @@ export default [
   ...result,
   ...message,
   ...form,
-  ...list
+  ...list,
+  ...detail
 ]

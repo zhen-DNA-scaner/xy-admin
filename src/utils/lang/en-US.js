@@ -21,6 +21,7 @@ module.exports = {
     'liststandard': 'Standard',
     'listcard': 'Card',
     'detail': 'Detail',
+    'detailarticle': 'Article',
     'detailbase': 'Basic',
     'detailsenior': 'Senior',
     'result': 'Result Page',

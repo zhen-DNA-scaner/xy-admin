@@ -35,13 +35,13 @@
         <a-sub-menu key="list">
           <span slot="title"><a-icon type="table" /><span>{{ $t('menu.list') }}</span></span>
           <a-menu-item key="query">{{ $t('menu.querytable') }}</a-menu-item>
-          <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item>
-          <a-menu-item key="sub3-1-4">{{ $t('menu.listcard') }}</a-menu-item>
+          <!-- <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item> -->
+          <a-menu-item key="card">{{ $t('menu.listcard') }}</a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="sub4">
+        <a-sub-menu key="detail">
           <span slot="title"><a-icon type="pic-left" /><span>{{ $t('menu.detail') }}</span></span>
-          <a-menu-item key="sub4-1-1">{{ $t('menu.detailbase') }}</a-menu-item>
-          <a-menu-item key="sub4-1-2">{{ $t('menu.detailsenior') }}</a-menu-item>
+          <a-menu-item key="article">{{ $t('menu.detailarticle') }}</a-menu-item>
+          <a-menu-item key="advanced">{{ $t('menu.detailsenior') }}</a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="result">
           <span slot="title"><a-icon type="check-circle" /><span>{{ $t('menu.result') }}</span></span>

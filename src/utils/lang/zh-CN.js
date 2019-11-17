@@ -21,6 +21,7 @@ module.exports = {
     'liststandard': '标准列表',
     'listcard': '卡片列表',
     'detail': '详情页',
+    'detailarticle': '文章详情页',
     'detailbase': '基础详情页',
     'detailsenior': '高级详情页',
     'result': '结果页',
