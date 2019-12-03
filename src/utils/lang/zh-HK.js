@@ -16,6 +16,7 @@ module.exports = {
     'formbase': '基礎表單',
     'formstepbystep': '分步表單',
     'formsenior': '高級表單',
+    'fullTextEditor': '富文本編輯器',
     'list': '列表頁',
     'querytable': '查詢表格',
     'liststandard': '標準列表',

@@ -30,6 +30,7 @@
           <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
           <a-menu-item key="base">{{ $t('menu.formbase') }}</a-menu-item>
           <a-menu-item key="stepbystep">{{ $t('menu.formstepbystep') }}</a-menu-item>
+          <a-menu-item key="fulltexteditor">{{ $t('menu.fullTextEditor') }}</a-menu-item>
           <!-- <a-menu-item key="senior">{{ $t('menu.formsenior') }}</a-menu-item> -->
         </a-sub-menu>
         <a-sub-menu key="list">

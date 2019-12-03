@@ -16,6 +16,7 @@ module.exports = {
     'formbase': 'Basic',
     'formstepbystep': 'Step by step',
     'formsenior': 'Senior',
+    'fullTextEditor': 'Full text editor',
     'list': 'List',
     'querytable': 'Query',
     'liststandard': 'Standard',
