@@ -151,14 +151,14 @@ const chartOptions = {
 import caretUp from '@/components/icons/caret-up';
 import caretDown from '@/components/icons/caret-down';
 import Chart from 'chart.js';
-import { getAnalysis } from '@/utils/api';
+// import { getAnalysis } from '@/utils/api';
 export default {
   components: {
     caretUp,
     caretDown
   },
   async mounted(){
-    const res = await getAnalysis();
+    const res = await this.$axios.get('/api/analysis');
     if(res.data.code && res.data.code === 20000){
       for(let k in res.data.data){
         this[k] = res.data.data[k];

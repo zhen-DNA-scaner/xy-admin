@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routes from './modules'
 import hasPermission from '@/utils/permission'
-import { getToken } from '@/utils/auth'
+import { isLogin } from '@/utils/auth'
 
 Vue.use(Router)
 
@@ -18,9 +18,9 @@ const whiteList = ['/login'];
 router.beforeEach(async(to, from, next) => {
   const inWhiteList = whiteList.includes(to.path);
   if(inWhiteList) return next();
-  const token = getToken();
+  const islog = isLogin();
   // is logined
-  if(token){
+  if(islog){
     const routeRoles = to.meta[0] ? to.meta[0].roles : null;
     // // the route is not set permission if meta roles is undefined
     if(routeRoles && routeRoles.length > 0){

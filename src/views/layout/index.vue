@@ -316,9 +316,12 @@ export default {
     extendAccount({ key }){
       switch(key){
         case 'logout':
-          this.$storage.clear('user');
-          this.$store.commit('setUser', null);
-          this.$router.replace('/login');
+          this.$axios.post('/api/logout').then(res=>{
+            console.log(res)
+          });
+          // this.$storage.clear('user');
+          // this.$store.commit('setUser', null);
+          // this.$router.replace('/login');
           break;
       }
     },

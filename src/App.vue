@@ -1,19 +1,31 @@
 <template>
   <div id="app">
-    <router-view v-if="$router.currentRoute.meta.layout === 'none'"/>
-    <Layout v-else>
+    <!-- <router-view v-if="$router.currentRoute.meta.layout === 'none'"/> -->
+    <Layout v-if="isLogin && $router.currentRoute.meta.layout !== 'none'">
       <router-view/>
       <!-- <keep-alive>
         <router-view/>
       </keep-alive> -->
     </Layout>
+    <router-view v-else />
   </div>
 </template>
 
 <script>
 import Layout from './views/layout';
+import { isLogin } from './utils/auth'
 export default {
-  components: { Layout }
+  components: { Layout },
+  data(){
+    return{
+      isLogin: false
+    }
+  },
+  watch: {
+    $route(){
+      this.isLogin = isLogin()
+    }
+  }
 }
 </script>
 

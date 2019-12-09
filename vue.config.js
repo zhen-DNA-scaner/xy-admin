@@ -1,12 +1,14 @@
 const path = require('path');
 const isDev = process.env.NODE_ENV === 'development';
 
+console.log(isDev)
+
 module.exports = {
   devServer: {
     port: 8080,
     proxy: {
       '/api': {
-        target: isDev ? 'http:localhost:8080' : 'http://www.acfun.cn',
+        target: isDev ? 'http://localhost:7001' : 'http://www.acfun.cn',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

@@ -11,7 +11,7 @@
     <a-form-item>
       <a-input
         v-decorator="[
-          'userName',
+          'email',
           { rules: [{ required: true, message: '邮箱不能为空!' }] }
         ]"
         placeholder="邮箱"
@@ -53,12 +53,12 @@
       >
         记住我
       </a-checkbox>
-      <a
+      <!-- <a
         class="login-form-forgot"
         @click.prevent="$emit('onForget')"
       >
         忘记密码？
-      </a>
+      </a> -->
       <a-button
         type="primary"
         html-type="submit"
@@ -69,17 +69,16 @@
         登陆
       </a-button>
     </a-form-item>
-    <div class="third-login">
+    <!-- <div class="third-login">
       第三方登陆：
       <a-icon class="icon github" type="github" />
       <a-icon class="icon wechat" type="wechat" />
       <a-icon class="icon qq" type="qq" />
-    </div>
+    </div> -->
   </a-form>
 </template>
 
 <script>
-  import { login } from '@/utils/api';
   export default {
     beforeCreate () {
       this.form = this.$form.createForm(this);
@@ -98,8 +97,8 @@
         this.form.validateFields(async (err, values) => {
           if (!err) {
             this.loading = 'loading';
-            const res = await login({ body: values });
-            if (res.data.code === 20000 && !res.data.errMsg) {
+            const res = await this.$axios.post('/api/login', values);
+            if (res.data.code === 20000) {
               this.$storage.set('user', res.data.data);
               this.$store.commit('setUser', res.data.data);
               this.$router.push('/');

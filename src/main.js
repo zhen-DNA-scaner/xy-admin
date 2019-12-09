@@ -11,12 +11,13 @@ import filter from '@/filter';
 import hasPermission from '@/utils/permission';
 import VueI18n from 'vue-i18n';
 import storage from '@/utils/storage';
+import axios from '@/utils/axios';
 
-const isDev = process.env.NODE_ENV === 'development';
+// const isDev = process.env.NODE_ENV === 'development';
 
-if (isDev) {
-  require('../mock');
-}
+// if (isDev) {
+//   require('../mock');
+// }
 
 Vue.use(antUI);
 Vue.use(components);
@@ -26,6 +27,7 @@ Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.prototype.$auth = hasPermission;
 Vue.prototype.$storage = storage;
+Vue.prototype.$axios = axios
 
 const i18n = new VueI18n({
   locale: 'zh-CN', // 语言标识, 通过切换locale的值来实现语言切换, this.$i18n.locale
