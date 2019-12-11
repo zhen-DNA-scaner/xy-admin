@@ -34,7 +34,7 @@
 <script>
 import moment from 'moment';
 import Chart from 'chart.js';
-import { getAnalysisGoods, getAnalysisGood } from '@/utils/api';
+// import { getAnalysisGoods, getAnalysisGood } from '@/utils/api';
 import { getCurrentDateRange } from '@/utils';
 
 
@@ -46,7 +46,7 @@ function resetChartData(chart, labels, datasets){
 
 export default {
   async mounted(){
-    const goodsRes = await getAnalysisGoods();
+    const goodsRes = await this.$axios.get('/api/analysis/goods');
 
     if(goodsRes.data && goodsRes.data.code === 20000){
       this.goods = goodsRes.data.data;
@@ -98,7 +98,7 @@ export default {
     },
     async setStoresChart(dateRange){
       if(!dateRange) dateRange = getCurrentDateRange();
-      let res = await getAnalysisGood({ params: this.goods[this.activeStores]._id, query: dateRange })
+      let res = await this.$axios.get(`/api/analysis/good?id=${this.goods[this.activeStores]._id}&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`);
       if(!res.data || res.data.code !== 20000) return false;
 
       const labels = res.data.data.labels;

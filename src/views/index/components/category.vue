@@ -58,10 +58,10 @@ const options = {
 };
 
 import Chart from 'chart.js';
-import { getAnalysisSalescategory } from '@/utils/api';
+// import { getAnalysisSalescategory } from '@/utils/api';
 export default {
   async mounted(){
-    const res = await getAnalysisSalescategory();
+    const res = await this.$axios.get('/api/analysis/categorysales');
     if(res.data && res.data.code === 20000){
       this.chartData = res.data.data;
       setTimeout(()=>{

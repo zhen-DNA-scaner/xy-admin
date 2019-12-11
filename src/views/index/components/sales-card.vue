@@ -1,5 +1,5 @@
 <template>
-  <a-tabs class="dashbord-analysis-sales-card" defaultActiveKey="sales" @change="changeTabs">
+  <a-tabs class="dashbord-analysis-sales-card" defaultActiveKey="pv" @change="changeTabs">
     <div slot="tabBarExtraContent" class="extra-content">
       <div class="days-selection">
         <span :class="{active: currentDate === 'today'}" @click="changeDate('today')">今日</span>
@@ -9,7 +9,7 @@
       </div>
       <a-range-picker :defaultValue="[moment(), moment()]" @change="changeDate" />
     </div>
-    <a-tab-pane class="pane" tab="销售额" key="sales">
+    <!-- <a-tab-pane class="pane" tab="销售额" key="sales">
       <a-row>
         <a-col :span="16">
           <a-skeleton :loading="!salesData" active :paragraph="{rows: 8}">
@@ -33,7 +33,7 @@
           </a-skeleton>
         </a-col>
       </a-row>
-    </a-tab-pane>
+    </a-tab-pane> -->
     <a-tab-pane class="pane" tab="访问量" key="pv" forceRender>
       <a-row>
         <a-col :span="16">
@@ -65,10 +65,10 @@ function resetChartData(chart, labels, data){
 
 import Chart from 'chart.js';
 import moment from 'moment';
-import { getSales, getPV } from '@/utils/api';
+// import { getSales, getPV } from '@/utils/api';
 export default {
   async mounted(){
-    await this.setsales({
+    await this.setpv({
       startDate: '2019-10-10',
       endDate: '2019-10-10'
     });
@@ -76,7 +76,7 @@ export default {
   data(){
     return{
       currentDate: 'today',
-      activeTab: 'sales',
+      activeTab: 'pv',
       pvData: null,
       salesData: null,
       salesChart: null,
@@ -140,56 +140,56 @@ export default {
         });
       }
     },
-    setSalesChartData(){
-      const labels = this.salesData.labels;
-      const data = this.salesData.data;
-      const len = this.salesData.labels.length;
-      let barThickness = 40;
+    // setSalesChartData(){
+    //   const labels = this.salesData.labels;
+    //   const data = this.salesData.data;
+    //   const len = this.salesData.labels.length;
+    //   let barThickness = 40;
 
-      if (len > 10) barThickness = 400 / len;
+    //   if (len > 10) barThickness = 400 / len;
 
-      // 只是更新
-      if (this.salesChart) {
-        this.salesChart.options.scales.xAxes[0].barThickness = barThickness;
-        resetChartData(this.salesChart, labels, data);
-        return false;
-      }
+    //   // 只是更新
+    //   if (this.salesChart) {
+    //     this.salesChart.options.scales.xAxes[0].barThickness = barThickness;
+    //     resetChartData(this.salesChart, labels, data);
+    //     return false;
+    //   }
 
-      const ctx = this.$refs.barchart;
-      this.salesChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: '销售趋势',
-              backgroundColor: '#1890ff',
-              borderWidth: 0,
-              borderColor: '#fff',
-              data
-            }
-          ]
-        },
-        options: {
-          scales: {
-            xAxes: [{
-              gridLines: {
-                display: false
-              },
-              barThickness
-            }],
-            yAxes: [{
-              gridLines: {
-                borderDash: [4]
-              },
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-      })
-    },
+    //   const ctx = this.$refs.barchart;
+    //   this.salesChart = new Chart(ctx, {
+    //     type: 'bar',
+    //     data: {
+    //       labels,
+    //       datasets: [
+    //         {
+    //           label: '销售趋势',
+    //           backgroundColor: '#1890ff',
+    //           borderWidth: 0,
+    //           borderColor: '#fff',
+    //           data
+    //         }
+    //       ]
+    //     },
+    //     options: {
+    //       scales: {
+    //         xAxes: [{
+    //           gridLines: {
+    //             display: false
+    //           },
+    //           barThickness
+    //         }],
+    //         yAxes: [{
+    //           gridLines: {
+    //             borderDash: [4]
+    //           },
+    //           ticks: {
+    //             beginAtZero: true
+    //           }
+    //         }]
+    //       }
+    //     }
+    //   })
+    // },
     setPVChartData(){
       const labels = this.pvData.labels;
       const data = this.pvData.data;
@@ -240,17 +240,17 @@ export default {
         }
       })
     },
-    async setsales({ startDate, endDate }){
-      const res = await getSales({ query: { startDate, endDate } });
-      if(res.data.code === 20000){
-        this.salesData = res.data.data;
-        setTimeout(()=>{
-          this.setSalesChartData();
-        }, 0);
-      }
-    },
+    // async setsales({ startDate, endDate }){
+    //   const res = await getSales({ query: { startDate, endDate } });
+    //   if(res.data.code === 20000){
+    //     this.salesData = res.data.data;
+    //     setTimeout(()=>{
+    //       this.setSalesChartData();
+    //     }, 0);
+    //   }
+    // },
     async setpv({ startDate, endDate }){
-      const res = await getPV({ query: { startDate, endDate } });
+      const res = await this.$axios.get(`/api/analysis/pv?startDate=${startDate}&endDate=${endDate}`);
       if(res.data.code === 20000){
         this.pvData = res.data.data;
         setTimeout(()=>{

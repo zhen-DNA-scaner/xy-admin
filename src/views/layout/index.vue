@@ -204,8 +204,7 @@
 <script>
 import debounce from 'lodash/debounce';
 // import { getSitemail, getMessage, getTodo, search } from '@/utils/api';
-import { getSitemail, getMessage, search } from '@/utils/api';
-import { mapActions } from 'vuex';
+import { search } from '@/utils/api';
 export default {
   mounted(){
     const that = this;
@@ -213,8 +212,8 @@ export default {
     // const mapMessageCount = ['sitemailCount', 'messageCount', 'todoCount'];
 
     Promise.all([
-      getSitemail({query: {isRead: false, limit: 15}}),
-      getMessage({query: {isRead: false, limit: 15}}),
+      this.$axios.get(`/api/sitemail?isRead=false&limit=15`),
+      this.$axios.get(`/api/sitemail/message?isRead=false&limit=15`)
       // getTodo()
     ]).then(res => {
       that.sitemailCount = res[0].data.data.noReadCount;
@@ -232,8 +231,6 @@ export default {
       //   }
       // })
     })
-    
-    this.getUser();
   },
   data(){
     return {
@@ -295,9 +292,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'getUser'
-    ]),
     // 全局点击收起搜索框
     globalClickHandle(e){
       if(!this.$refs.search.contains(e.target) && this.searchExtended) this.searchExtended = false;
@@ -372,9 +366,7 @@ $navHeight: 50px;
 }
 .layout-leftnav{
   @include scrollbar(4px, rgba(255,255,255,0.3));
-  width: 220px!important;
   max-width: 220px!important;
-  flex: 0 0 220px!important;
 }
 .layout-header-width-content{
   @include scrollbar(6px);

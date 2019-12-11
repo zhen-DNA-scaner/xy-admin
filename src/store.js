@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import storage from './utils/storage'
-import { getUser } from '@/utils/api'
 
 Vue.use(Vuex)
 
@@ -24,13 +23,6 @@ export default new Vuex.Store({
     setUser(state, payload){
       const user = state.user || {};
       state.user = Object.assign(user, payload);
-    }
-  },
-  actions: {
-    async getUser({commit}){
-      const res = await getUser();
-      if(res.data && res.data.code === 20000)
-        commit('setUser', res.data.data);
     }
   }
 })

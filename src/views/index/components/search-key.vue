@@ -83,14 +83,14 @@ const columns = [{
 import caretUp from '@/components/icons/caret-up';
 import caretDown from '@/components/icons/caret-down';
 import Chart from 'chart.js';
-import { getAnalysisSearch } from '@/utils/api';
+// import { getAnalysisSearch } from '@/utils/api';
 export default {
   components: {
     caretUp,
     caretDown
   },
   async mounted(){
-    const res = await getAnalysisSearch();
+    const res = await this.$axios.get('/api/analysis/search');
     if(res.data.code && res.data.code === 20000){
       this.tableData = res.data.data.list;
       this.usersSearch = res.data.data.usersSearch;
@@ -226,12 +226,12 @@ export default {
       };
       this.sortKey = sorter.columnKey;
       this.sort = mapOrder[sorter.order] || '';
-      const res = await getAnalysisSearch({ query: { key: this.sortKey, sort: this.sort } });
+      const res = await this.$axios.get(`/api/analysis/search?key=${this.sortKey}&sort=${this.sort}`);
       this.tableData = res.data.data.list;
       this.page = 1;
     },
     async changePagination(page){
-      const res = await getAnalysisSearch({ query: { key: this.sortKey, sort: this.sort, page } });
+      const res = await this.$axios.get(`/api/analysis/search?key=${this.sortKey}&sort=${this.sort}&page=${page}`);
       this.tableData = res.data.data.list;
     }
   }
