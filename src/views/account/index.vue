@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { Random } from '@/utils';
+import { Random } from '@/utils/math';
 import addressIcon from '@/components/icons/address';
 import { getUserDynamic } from '@/utils/api';
 export default {

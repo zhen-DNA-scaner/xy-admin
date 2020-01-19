@@ -199,6 +199,8 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
+    font-size: 12px;
+    line-height: 1.5;
     .content{
       display: flex;
       padding: 20px 20px 0;

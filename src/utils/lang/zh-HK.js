@@ -35,6 +35,7 @@ module.exports = {
     'accountpassword': '修改密碼',
     'accountphone': '修改手機號',
     'accountemail': '修改郵箱',
+    'cloud': '雲盤空間',
     'permission': '權限管理頁'
   }
 }

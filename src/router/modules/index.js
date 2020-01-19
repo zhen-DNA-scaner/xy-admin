@@ -8,6 +8,8 @@ import message from './message';
 import form from './form';
 import list from './list';
 import detail from './detail';
+import course from './course';
+import cloud from './cloud';
 
 const index = [{
   path: '/',
@@ -42,5 +44,7 @@ export default [
   ...message,
   ...form,
   ...list,
-  ...detail
+  ...detail,
+  ...course,
+  ...cloud
 ]

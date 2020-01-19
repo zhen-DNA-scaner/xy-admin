@@ -26,18 +26,24 @@
           <!-- <a-menu-item key="sub1-1-2">{{ $t('menu.monitor') }}</a-menu-item>
           <a-menu-item key="sub1-1-3">{{ $t('menu.workbench') }}</a-menu-item> -->
         </a-sub-menu>
-        <a-sub-menu key="form">
-          <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
-          <a-menu-item key="base">{{ $t('menu.formbase') }}</a-menu-item>
-          <a-menu-item key="stepbystep">{{ $t('menu.formstepbystep') }}</a-menu-item>
-          <a-menu-item key="fulltexteditor">{{ $t('menu.fullTextEditor') }}</a-menu-item>
-          <!-- <a-menu-item key="senior">{{ $t('menu.formsenior') }}</a-menu-item> -->
+        <a-sub-menu key="course">
+          <span slot="title"><a-icon type="video-camera" /><span>课程管理</span></span>
+          <a-menu-item key="courselist">课程列表</a-menu-item>
+          <a-menu-item key="addvideo">上传视频</a-menu-item>
+          <a-menu-item key="workslist">素材列表</a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="list">
           <span slot="title"><a-icon type="table" /><span>{{ $t('menu.list') }}</span></span>
           <a-menu-item key="query">{{ $t('menu.querytable') }}</a-menu-item>
           <!-- <a-menu-item key="sub3-1-3">{{ $t('menu.liststandard') }}</a-menu-item> -->
           <a-menu-item key="card">{{ $t('menu.listcard') }}</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="form">
+          <span slot="title"><a-icon type="form" /><span>{{ $t('menu.form') }}</span></span>
+          <a-menu-item key="base">{{ $t('menu.formbase') }}</a-menu-item>
+          <a-menu-item key="stepbystep">{{ $t('menu.formstepbystep') }}</a-menu-item>
+          <a-menu-item key="fulltexteditor">{{ $t('menu.fullTextEditor') }}</a-menu-item>
+          <!-- <a-menu-item key="senior">{{ $t('menu.formsenior') }}</a-menu-item> -->
         </a-sub-menu>
         <a-sub-menu key="detail">
           <span slot="title"><a-icon type="pic-left" /><span>{{ $t('menu.detail') }}</span></span>
@@ -60,6 +66,9 @@
           <a-menu-item key="center">{{ $t('menu.personalcenter') }}</a-menu-item>
           <a-menu-item key="setting">{{ $t('menu.personalsetting') }}</a-menu-item>
         </a-sub-menu>
+        <a-menu-item key="cloud">
+          <a-icon type="cloud" /><span>{{ $t('menu.cloud') }}</span>
+        </a-menu-item>
         <a-menu-item v-if="$auth(['admin'])" key="permission">
           <a-icon type="key" /><span>{{ $t('menu.permission') }}</span>
           <!-- <router-link to="/permission"><a-icon type="key" /><span>{{ $t('menu.permission') }}</span></router-link> -->
@@ -311,11 +320,12 @@ export default {
       switch(key){
         case 'logout':
           this.$axios.post('/api/logout').then(res=>{
-            console.log(res)
+            if(res.status === 200){
+              this.$storage.clear('user');
+              this.$store.commit('setUser', null);
+              this.$router.replace('/login');
+            }
           });
-          // this.$storage.clear('user');
-          // this.$store.commit('setUser', null);
-          // this.$router.replace('/login');
           break;
       }
     },
@@ -572,7 +582,7 @@ $navHeight: 50px;
       width: 340px;
     }
     .avatar-wraper{
-      margin: 0 15px;
+      margin: 0 15px 0 25px;
       font-size: $font-size-base - 1px;
       cursor: pointer;
       height: 100%;

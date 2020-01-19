@@ -35,6 +35,7 @@ module.exports = {
     'accountpassword': 'Modify password',
     'accountphone': 'Modify phone',
     'accountemail': 'Modify email',
+    'cloud': 'Cloud Disk',
     'permission': 'Permission'
   }
 }

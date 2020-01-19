@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import router from '../router'
+import router from '../router'
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
@@ -18,7 +18,7 @@ axios.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   switch(true){
     case `${error}`.indexOf('status code 401') > -1:
-      // router.push('/login')
+      router.push('/login')
   }
   return Promise.reject(error);
 });

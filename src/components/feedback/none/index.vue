@@ -9,6 +9,8 @@
 .data-none-wraper{
   text-align: center;
   margin: 40px 0 60px;
+  width: 100%;
+  flex: 1 1 auto;
   p{
     color: #999;
     margin: 8px 0;

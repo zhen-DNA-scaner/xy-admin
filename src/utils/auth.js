@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import store from '../store'
+import store from '../store/index'
 import storage from './storage'
 
 const TokenKey = 'EGG_SESS'
