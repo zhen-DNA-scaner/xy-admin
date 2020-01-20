@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import storage from '../utils/storage'
 import course from './modules/course'
+import cloud from './modules/cloud'
 
 Vue.use(Vuex)
 
@@ -27,6 +28,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    course
+    course,
+    cloud
   }
 })

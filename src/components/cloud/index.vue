@@ -41,26 +41,29 @@
           <loading></loading>
         </div>
         <template v-else>
-          <data-none v-if="cloudFiles.length === 0"><p>暂无数据</p></data-none>
-          <div v-else class="files-content">
+          <div v-if="cloudFiles.length" class="files-content">
             <div
               v-for="file in cloudFiles"
               :key="file._id"
-              :class="['item', selected.indexOf(file._id) > -1?'selected':'']"
+              :class="['item', selected_ids.indexOf(file._id) > -1?'selected':'']"
               :title="file.name"
-              @click="onSelectChange(file._id)">
+              @click="onSelectChange(file)">
               <img :src="$ci + file.cosName + '?imageMogr2/thumbnail/129x'" :alt="file.name" />
               <div class="checkbox"></div>
-              <a-icon type="check" v-if="selected.indexOf(file._id) > -1" :style="{color: '#fff'}" />
+              <a-icon type="check" v-if="selected_ids.indexOf(file._id) > -1" :style="{color: '#fff'}" />
             </div>
           </div>
+          <data-none v-else><p>暂无数据</p></data-none>
         </template>
         <div class="pagination-wraper">
           <span>容量:<b>0M</b>/5G</span>
           <a-pagination
-            v-show="cloudFiles.length > 0"
-            simple :defaultCurrent="2"
-            :total="50" @change="onPaginationChange"
+            v-show="cloudFiles.length"
+            simple
+            :defaultCurrent="1"
+            :total="filesTotal"
+            :defaultPageSize="21"
+            @change="onPaginationChange"
           />
         </div>
       </div>
@@ -71,14 +74,19 @@
 <script>
 import dataNone from '@/components/feedback/none'
 import loading from '@/components/feedback/loading'
+import {mapState, mapActions, mapMutations} from 'vuex'
 export default {
   components: {dataNone, loading},
   props: {
     multiSeleted: Boolean
   },
+  async created(){
+    await this.getCloudFiles();
+    this.isLoading = false;
+  },
   data(){
     return{
-      isLoading: false,
+      isLoading: true,
       active: 0,
       cates: [
         {name: '全部文件', icon: ''},
@@ -86,13 +94,25 @@ export default {
         {name: '视频', icon: 'play-circle'},
         {name: '垃圾桶', icon: 'delete'}
       ],
-      selected: [],
-      cloudFiles: [],
+      selected_ids: [],
+      selected_files: [],
       acceptFileTypes: 'image/gif,image/jpeg,image/jpg,image/png,video/mp4',
       currentUploadFile: null
     }
   },
+  computed: {
+    ...mapState({
+      cloudFiles: state => state.cloud.list,
+      filesTotal: state => state.cloud.total
+    })
+  },
   methods: {
+    ...mapMutations({
+      unshiftCloud: 'unshift'
+    }),
+    ...mapActions({
+      getCloudFiles: 'getFiles'
+    }),
     onCatesChange(i){
       if(i !== this.active){
         this.isLoading = true;
@@ -102,23 +122,26 @@ export default {
         }, 500);
       }
     },
-    onSelectChange(_id){
-      if(this.multiSeleted){
-        const index = this.selected.indexOf(_id);
-        if(index > -1){
-          this.selected.splice(index, 1);
-        }else{
-          this.selected.push(_id);
-        }
+    onSelectChange(file){
+      const index = this.selected_ids.indexOf(file._id);
+      if(index > -1){
+        this.selected_ids.splice(index, 1);
+        this.selected_files.splice(index, 1);
       }else{
-        this.selected = [_id];
+        if (this.multiSeleted){
+          this.selected_ids.push(file._id);
+          this.selected_files.push(file);
+        }else{
+          this.selected_ids = [file._id];
+          this.selected_files = [file];
+        }
       }
+      this.$emit('onSelect', this.selected_files);
     },
-    onPaginationChange(){
+    async onPaginationChange(page){
       this.isLoading = true;
-      setTimeout(()=>{
-        this.isLoading = false;
-      }, 500);
+      await this.getCloudFiles(page);
+      this.isLoading = false;
     },
     onBeforeUpload(file){
       if(this.acceptFileTypes.indexOf(file.type) === -1){
@@ -157,10 +180,10 @@ export default {
           formData.append('height', img.height);
           formData.append('size', e.file.size);
           // 开始上传到服务器
-          this.$axios.post('/api/upload', formData, {
+          this.$axios.post('/api/cloud', formData, {
             headers: { "Content-Type": "multipart/form-data" }
           }).then(res=>{
-            this.cloudFiles.unshift(res.data);
+            this.unshiftCloud(res.data);
             // 上传完成提示
             res.data = Object.assign(res.data, {
               status: '上传完成',
@@ -183,6 +206,7 @@ export default {
 <style lang="scss">
 .xy-cloud-wraper{
   display: flex;
+  width: 100%;
   .left-cates{
     flex: 0 0 200px;
     border-right: solid 1px #eee;

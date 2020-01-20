@@ -33,48 +33,10 @@
           <a-textarea v-decorator="['description']" placeholder="主要介绍课程可以学到什么、可以运用于哪方面的生活或工作" :rows="4" />
         </a-form-item>
         <a-form-item label="课程封面" v-bind="formItemLayout">
-          <a-upload-dragger
-            class="poster-upload-item"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture-card"
-            :showUploadList="false"
-            :beforeUpload="beforeUpload"
-            @change="handlePosterChange"
-          >
-            <img v-if="posterUrl" :src="posterUrl" />
-            <div v-else>
-              <a-icon :type="posterLoading ? 'loading' : 'plus'" />
-              <div class="ant-upload-text">上传</div>
-            </div>
-          </a-upload-dragger>
-          <a-tooltip placement="right">
-            <a-icon type="question-circle" :style="questionIconStyles" />
-            <template slot="title">
-              建议尺寸：400x340px
-            </template>
-          </a-tooltip>
+          <upload tips="建议尺寸：400x340px"></upload>
         </a-form-item>
         <a-form-item label="课程图标" v-bind="formItemLayout">
-          <a-upload-dragger
-            class="poster-upload-item"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture-card"
-            :showUploadList="false"
-            :beforeUpload="beforeUpload"
-            @change="handleIconChange"
-          >
-            <img v-if="iconUrl" :src="iconUrl" />
-            <div v-else>
-              <a-icon :type="iconLoading ? 'loading' : 'plus'" />
-              <div class="ant-upload-text">上传</div>
-            </div>
-          </a-upload-dragger>
-          <a-tooltip placement="right">
-            <a-icon type="question-circle" :style="questionIconStyles" />
-            <template slot="title">
-              建议尺寸：80x80px
-            </template>
-          </a-tooltip>
+          <upload tips="建议尺寸：80x80px"></upload>
         </a-form-item>
         <a-form-item label="更新状态" v-bind="formItemLayout">
           <a-row :gutter="20">
@@ -90,7 +52,7 @@
         <a-form-item label="权重" v-bind="formItemLayout">
           <a-input-number v-decorator="['weight']"  :min="0" :max="100" :style="{marginRight: '10px'}" />%
           <a-tooltip placement="right">
-            <a-icon type="question-circle" :style="questionIconStyles" />
+            <a-icon type="question-circle" :style="{color: '#ccc', fontSize: '16px', marginLeft: '10px'}" />
             <template slot="title">
               百分比值越高，排序越靠前
             </template>
@@ -120,14 +82,10 @@
 <script>
 import { formItemLayout, buttonItemLayout } from './form-layout';
 import {mapState, mapActions} from 'vuex';
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
+import upload from '@/components/upload/single';
 
 export default {
+  components: {upload},
   created(){
     this.form = this.$form.createForm(this);
     this.getCourseCategory();
@@ -150,12 +108,7 @@ export default {
           breadcrumbName: '添加课程'
         }
       ],
-      btnLoading: false,
-      posterUrl: '',
-      posterLoading: false,
-      iconUrl: '',
-      iconLoading: false,
-      questionIconStyles: {color: '#ccc', fontSize: '16px', marginLeft: '10px'}
+      btnLoading: false
     }
   },
   computed: {
@@ -207,46 +160,7 @@ export default {
           this.btnLoading = false;
         }
       });
-    },
-    // 上传文件改变
-    handlePosterChange(info) {
-      if (info.file.status === 'uploading') {
-        this.posterLoading = true;
-        return;
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, imageUrl => {
-          this.posterUrl = imageUrl;
-          this.posterLoading = false;
-        });
-      }
-    },
-    // 上传文件改变
-    handleIconChange(info) {
-      if (info.file.status === 'uploading') {
-        this.iconLoading = true;
-        return;
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, imageUrl => {
-          this.iconUrl = imageUrl;
-          this.iconLoading = false;
-        });
-      }
-    },
-    beforeUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      if (!isJPG) {
-        this.$message.error('仅支持上传JPG图片格式');
-      }
-      const isLt1M = file.size / 1024 / 1024 < 1;
-      if (!isLt1M) {
-        this.$message.error('图片大小不能大于1MB!');
-      }
-      return isJPG && isLt1M;
-    },
+    }
   }
 }
 </script>
@@ -254,18 +168,5 @@ export default {
 <style lang="scss">
 .form-base-content{
   @include contentPannel;
-  .poster-upload-item {
-    display: inline-block;
-    & > .ant-upload, span.ant-upload {
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    img{
-      max-width: 100%;
-    }
-  }
 }
 </style>
