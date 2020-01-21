@@ -33,10 +33,10 @@
           <a-textarea v-decorator="['description']" placeholder="主要介绍课程可以学到什么、可以运用于哪方面的生活或工作" :rows="4" />
         </a-form-item>
         <a-form-item label="课程封面" v-bind="formItemLayout">
-          <upload tips="建议尺寸：400x340px"></upload>
+          <upload tips="建议尺寸：400x340px" :imgUrl.sync="posterUrl"></upload>
         </a-form-item>
         <a-form-item label="课程图标" v-bind="formItemLayout">
-          <upload tips="建议尺寸：80x80px"></upload>
+          <upload tips="建议尺寸：80x80px" :imgUrl.sync="iconUrl"></upload>
         </a-form-item>
         <a-form-item label="更新状态" v-bind="formItemLayout">
           <a-row :gutter="20">
@@ -89,6 +89,7 @@ export default {
   created(){
     this.form = this.$form.createForm(this);
     this.getCourseCategory();
+    this.showCourse(this.$route.params.id);
   },
   mounted() {
     if(this.isEditable) this.routes[2].breadcrumbName = '编辑课程';
@@ -108,7 +109,9 @@ export default {
           breadcrumbName: '添加课程'
         }
       ],
-      btnLoading: false
+      btnLoading: false,
+      posterUrl: '',
+      iconUrl: ''
     }
   },
   computed: {
@@ -137,20 +140,28 @@ export default {
       e.preventDefault();
       this.form.validateFields(async (err, values) => {
         if (!err) {
-          // values = Object.assign(values, {
-          //   posterUrl: this.posterUrl,
-          //   iconUrl: this.iconUrl
-          // })
-          // console.log('Received values of form: ', values);
-          this.btnLoading = true;
-          const res = await this.$axios.post('/api/course', values).catch(err=>{
+          const id = this.$route.params.id;
+          const isModify = id && id != '0';
+          const errHandle = err=>{
             this.btnLoading = false
             if(`${err}`.indexOf('status code 500') >-1){
               this.$message.error('服务器出错！')
             }
-          });
+          };
+          let res = null;
+          values = Object.assign(values, {
+            posterUrl: this.posterUrl,
+            iconUrl: this.iconUrl
+          })
+          // console.log('Received values of form: ', values);
+          this.btnLoading = true;
+          if(isModify){
+            res = await this.$axios.put(`/api/course/${id}`, values).catch(errHandle);
+          }else{
+            res = await this.$axios.post('/api/course', values).catch(errHandle);
+          }
           if(res && res.data && res.data.code === 20000){
-            this.$message.success('添加成功');
+            this.$message.success(isModify ? '保存成功' : '添加成功');
             setTimeout(()=>{
               this.$router.go(-1);
             }, 1000);
@@ -160,6 +171,22 @@ export default {
           this.btnLoading = false;
         }
       });
+    },
+    async showCourse(id){
+      if(!id)return false;
+      const res = await this.$axios.get(`/api/course/${id}`);
+      const data = res.data.data;
+      this.form.setFieldsValue({
+        title: data.title,
+        category: data.category,
+        level: data.level,
+        description: data.description,
+        status: data.status,
+        weight: data.weight,
+        isOpen: data.isOpen
+      });
+      this.posterUrl = data.posterUrl;
+      this.iconUrl = data.iconUrl;
     }
   }
 }

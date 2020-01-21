@@ -11,6 +11,9 @@ export default {
     },
     setList(state, payload){
       state.list = payload
+    },
+    deleteCourse(state, index){
+      state.list.splice(index, 1);
     }
   },
   actions: {

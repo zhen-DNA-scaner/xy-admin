@@ -1,9 +1,9 @@
 <template>
   <div class="cloud-page">
     <div class="poster-upload-item" @click="() => visible = true">
-      <template v-if="img">
-        <img :src="$ci + img + '?imageMogr2/thumbnail/129x'" />
-        <span class="clear" @click.stop="()=>img=null">×</span>
+      <template v-if="imgUrl">
+        <img :src="$ci + imgUrl + '?imageMogr2/thumbnail/129x'" />
+        <span class="clear" @click.stop="()=>$emit('update:imgUrl', '')">×</span>
       </template>
       <template v-else>
         <a-icon type="plus" />
@@ -41,13 +41,12 @@ export default {
   data(){
     return{
       visible: false,
-      selectedFiles: [],
-      img: this.imgUrl
+      selectedFiles: []
     }
   },
   methods: {
     onOk(){
-      this.img = this.selectedFiles[0].cosName;
+      this.$emit('update:imgUrl', this.selectedFiles[0].cosName);
       this.visible = false;
     }
   }

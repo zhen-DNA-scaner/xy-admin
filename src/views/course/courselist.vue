@@ -30,12 +30,12 @@
             <span>新增课程</span>
           </router-link>
         </a-col>
-        <a-col :span="6" v-for="v in courseList" :key="v._id">
+        <a-col :span="6" v-for="(v, i) in courseList" :key="v._id">
           <div class="item">
             <div class="content">
               <div class="left">
                 <!-- <a-icon :style="{fontSize: '34px', color: '#00adf7'}" type="alipay-circle" /> -->
-                <img :class="v.iconUrl ? '':'is-gray'" :src="v.iconUrl || require('../../assets/img/logo-mini.svg')">
+                <img :class="v.iconUrl ? '':'is-gray'" :src="iconUrl(v.iconUrl)">
               </div>
               <div class="info">
                 <h2>{{v.title}}</h2>
@@ -43,8 +43,8 @@
               </div>
             </div>
             <div class="footer">
-              <router-link to="/course/add/1">编辑</router-link>
-              <div>删除</div>
+              <router-link :to="`/course/add/${v._id}`">编辑</router-link>
+              <div @click="showConfirm(v._id, i)">删除</div>
             </div>
           </div>
         </a-col>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState, mapActions, mapMutations} from 'vuex';
 export default {
   created(){
     this.form = this.$form.createForm(this);
@@ -84,7 +84,33 @@ export default {
     ...mapActions({
       getCourseCategory: 'getCategory',
       getCourseList: 'getList'
-    })
+    }),
+    ...mapMutations({
+      deleteCourse: 'deleteCourse'
+    }),
+    iconUrl(url){
+      return url ? this.$ci + url + '?imageMogr2/thumbnail/40x' : require('../../assets/img/logo-mini.svg')
+    },
+    showConfirm(id, index) {
+      const _this = this;
+      this.$confirm({
+        title: '确定删除？',
+        content: '删除后将无法恢复，但该课程下的视频与评论将保留。',
+        cancelText: '取消',
+        okText: '删除',
+        maskClosable: true,
+        async onOk() {
+          const res = await _this.$axios.delete(`/api/course/${id}`);
+          if(res.data.code === 20000){
+            _this.$message.success('删除成功');
+            _this.deleteCourse(index);
+          }else{
+            _this.$message.error(res.data.errMsg || '删除失败');
+          }
+        },
+        onCancel() {},
+      });
+    }
     // async init(){
     //   const res = await this.$axios.get('/api/category?type=course');
     //   if (res.data && res.data.code === 20000) {
@@ -130,8 +156,8 @@ export default {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: #eee;
-        padding: 4px;
+        background: #ddd;
+        padding: 2px;
         box-sizing: border-box;
       }
       .is-gray{
